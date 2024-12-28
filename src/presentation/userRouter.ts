@@ -1,8 +1,9 @@
 import { Hono } from "hono";
 import { SignupUserUsecase } from "../application/usecase/signupUserUsecase.js";
+import { UserGateway } from "../infrastructure/userGateway.js";
 
 const user = new Hono();
-const signupUserUsecase = new SignupUserUsecase();
+const signupUserUsecase = new SignupUserUsecase(new UserGateway());
 
 export type UserPostRequestBody = {
   email: string;
