@@ -1,10 +1,7 @@
 import * as z from "zod";
 
 export const UserModel = z.object({
-  email: z.string().email(),
-  name: z.string({
-    required_error: "Name is required",
-    invalid_type_error: "Name must be a string",
-  }),
-  password: z.string(),
+  email: z.string().email().nonempty(),
+  name: z.string().nonempty({ message: "name is not empty" }),
+  password: z.string().nonempty({ message: "password is not empty" }),
 });
