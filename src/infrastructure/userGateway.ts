@@ -1,14 +1,11 @@
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
+import { UserPostRequestBody } from "../presentation/userRouter.js";
 const prisma = new PrismaClient();
 
 export class UserGateway {
-  async insert(email: string, name: string, password: string) {
+  async insert(userData: UserPostRequestBody): Promise<User> {
     const user = await prisma.user.create({
-      data: {
-        email: email,
-        name: name,
-        password: password,
-      },
+      data: userData,
     });
     return user;
   }

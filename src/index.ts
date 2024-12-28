@@ -1,12 +1,15 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { prettyJSON } from "hono/pretty-json";
+import { logger } from "hono/logger";
 import user from "./presentation/userRouter.js";
 
 const app = new Hono().basePath("/api");
 
 //ミドルウェアの設定
 app.use("*", prettyJSON());
+app.use(logger());
+
 app.route("/", user);
 
 app.get("/", (c) => {
