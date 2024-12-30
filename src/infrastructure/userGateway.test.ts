@@ -1,19 +1,12 @@
 import { UserGateway } from "./userGateway.js";
 import { UserPostRequestBody } from "../presentation/userRouter.js";
-import { PrismaClient } from "@prisma/client";
+import { prismaMock } from "../singleton.js";
 
 describe("UserGateway", () => {
   let userGateway: UserGateway;
-  let mockPrisma: any;
 
-  beforeEach(() => {
-    mockPrisma = {
-      user: {
-        create: jest.fn(),
-      },
-    };
-
-    userGateway = new UserGateway(mockPrisma);
+  beforeAll(() => {
+    userGateway = new UserGateway(prismaMock);
   });
 
   it("should insert a user successfully", async () => {
@@ -29,12 +22,12 @@ describe("UserGateway", () => {
       created_at: new Date(),
       updated_at: new Date(),
     };
-    mockPrisma.user.create.mockResolvedValue(expectedUser);
+    prismaMock.user.create.mockResolvedValue(expectedUser);
 
     const userRecord = await userGateway.insert(userData);
 
     expect(userRecord).toEqual(expectedUser);
-    expect(mockPrisma.user.create).toHaveBeenCalledWith({ data: userData });
+    expect(prismaMock.user.create).toHaveBeenCalledWith({ data: userData });
   });
 
   it("should throw an error when inserting fails", async () => {
@@ -44,7 +37,7 @@ describe("UserGateway", () => {
       password: "password123",
     };
 
-    mockPrisma.user.create.mockRejectedValue(new Error("Database error"));
+    prismaMock.user.create.mockRejectedValue(new Error("Database error"));
 
     await expect(userGateway.insert(userData)).rejects.toThrow(
       "Database error"

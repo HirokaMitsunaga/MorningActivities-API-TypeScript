@@ -1,13 +1,12 @@
 import { PrismaClient, User } from "@prisma/client";
 import { UserPostRequestBody } from "../presentation/userRouter.js";
 import { UserGatewayInterface } from "../domain/userGatewayInterface.js";
-// const prisma = new PrismaClient();
 
 export class UserGateway implements UserGatewayInterface {
   private prisma: PrismaClient;
 
-  constructor(prismaClient?: PrismaClient) {
-    this.prisma = prismaClient || new PrismaClient();
+  constructor(prismaClient: PrismaClient) {
+    this.prisma = prismaClient;
   }
 
   async insert(userData: UserPostRequestBody): Promise<User> {

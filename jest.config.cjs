@@ -13,4 +13,5 @@ module.exports = {
     ],
   },
   testMatch: ["**/*.test.ts"],
+  setupFilesAfterEnv: ["<rootDir>/src/singleton.ts"],
 };

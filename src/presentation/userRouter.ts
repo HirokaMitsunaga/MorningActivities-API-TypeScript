@@ -1,9 +1,11 @@
 import { Hono } from "hono";
 import { SignupUserUsecase } from "../application/usecase/signupUserUsecase.js";
 import { UserGateway } from "../infrastructure/userGateway.js";
+import { PrismaClient } from "@prisma/client/extension";
 
 const user = new Hono();
-const signupUserUsecase = new SignupUserUsecase(new UserGateway());
+const prismaClient = PrismaClient();
+const signupUserUsecase = new SignupUserUsecase(new UserGateway(prismaClient));
 
 export type UserPostRequestBody = {
   email: string;
