@@ -1,9 +1,6 @@
 import { Hono } from "hono";
-import { SignupUserUsecase } from "../application/usecase/signupUserUsecase.js";
 import { UserPostRequestBody } from "./userRouter.js";
 import { User } from "@prisma/client";
-import { UserGateway } from "../infrastructure/userGateway.js";
-import { PrismaClient } from "@prisma/client/extension";
 
 describe("signup test", () => {
   //userGatewayがSignupUserUsecaseへ依存しており、userGatewayに対してもモック化する必要があるため下記のようにしてSignupUserUsecaseをモック化する
