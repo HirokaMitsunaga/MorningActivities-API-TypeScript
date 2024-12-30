@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { SignupUserUsecase } from "../application/usecase/signupUserUsecase.js";
 import { UserGateway } from "../infrastructure/userGateway.js";
 import { PrismaClient } from "@prisma/client/extension";
+import { error } from "console";
 
 const user = new Hono();
 const prismaClient = PrismaClient();
@@ -14,9 +15,17 @@ export type UserPostRequestBody = {
 };
 
 user.post("/signup", async (c) => {
-  const userData: UserPostRequestBody = await c.req.json<UserPostRequestBody>();
-  const userRes = await signupUserUsecase.run(userData);
-  return c.json(userRes, 201);
+  try {
+    const userData: UserPostRequestBody =
+      await c.req.json<UserPostRequestBody>();
+    const userRes = await signupUserUsecase.run(userData);
+    return c.json(userRes, 201);
+  } catch (error) {
+    return c.json(
+      { error: error instanceof Error ? error.message : "Failed to sign up" },
+      500
+    );
+  }
 });
 
 user.get("/login", (c) => c.text("loigin"));

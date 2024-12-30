@@ -10,9 +10,19 @@ export class UserGateway implements UserGatewayInterface {
   }
 
   async insert(userData: UserPostRequestBody): Promise<User> {
-    const user = await this.prisma.user.create({
-      data: userData,
-    });
-    return user;
+    try {
+      const user = await this.prisma.user.create({
+        data: userData,
+      });
+      if (!user) {
+        throw new Error("Failed to create user");
+      }
+      return user;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Unknown error occurred while creating user");
+    }
   }
 }
