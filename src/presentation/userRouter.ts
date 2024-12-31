@@ -2,7 +2,6 @@ import { Hono } from "hono";
 import { SignupUserUsecase } from "../application/usecase/signupUserUsecase.js";
 import { UserGateway } from "../infrastructure/userGateway.js";
 import { PrismaClient } from "@prisma/client/extension";
-import { error } from "console";
 
 const user = new Hono();
 const prismaClient = PrismaClient();
