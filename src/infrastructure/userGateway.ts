@@ -25,4 +25,23 @@ export class UserGateway implements UserGatewayInterface {
       throw new Error("Unknown error occurred while creating user");
     }
   }
+
+  async getUserByEmail(email: string): Promise<User> {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: {
+          email: email,
+        },
+      });
+      if (!user) {
+        throw new Error("Not Found User");
+      }
+      return user;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Unknown error occurred while get user by Email");
+    }
+  }
 }

@@ -5,6 +5,7 @@ import { User } from "@prisma/client";
 describe("SignupUserUsecase Test", () => {
   let mockUserGateway: {
     insert: jest.Mock<Promise<User>, [UserPostRequestBody]>;
+    getUserByEmail: jest.Mock<Promise<User>, [string]>;
   };
   let signupUserUsecase: SignupUserUsecase;
 
@@ -17,6 +18,7 @@ describe("SignupUserUsecase Test", () => {
   beforeEach(() => {
     mockUserGateway = {
       insert: jest.fn(),
+      getUserByEmail: jest.fn(),
     };
     signupUserUsecase = new SignupUserUsecase(mockUserGateway);
   });
