@@ -26,7 +26,7 @@ export class UserGateway implements UserGatewayInterface {
     }
   }
 
-  async getUserByEmail(email: string): Promise<User> {
+  async getUserByEmail(email: string): Promise<User | undefined> {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -34,7 +34,7 @@ export class UserGateway implements UserGatewayInterface {
         },
       });
       if (!user) {
-        throw new Error("Not Found User");
+        return undefined;
       }
       return user;
     } catch (error) {
