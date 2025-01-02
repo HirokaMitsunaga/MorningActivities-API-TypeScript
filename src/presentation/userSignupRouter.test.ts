@@ -4,7 +4,6 @@ import { User } from "@prisma/client";
 import { testClient } from "hono/testing";
 import { UserModel } from "../validator/user.js";
 import { ValidationError } from "../validator/validationError.js";
-import { string } from "zod";
 
 describe("signup and login test", () => {
   //userGatewayがSignupUserUsecaseへ依存しており、userGatewayに対してもモック化する必要があるため下記のようにしてSignupUserUsecaseをモック化する

@@ -3,6 +3,7 @@ import { UserPostRequestBody } from "../../presentation/userRouter.js";
 import { comparePassword } from "../../utils/hashPassword.js";
 import { UserGatewayInterface } from "../../domain/userGatewayInterface.js";
 import { sign } from "hono/jwt";
+import { ValidationError } from "../../validator/validationError.js";
 
 export class LoginUserUsecase {
   constructor(private _userGateway: UserGatewayInterface) {}
@@ -16,7 +17,7 @@ export class LoginUserUsecase {
     //ユーザの存在チェック
     const user = await this._userGateway.getUserByEmail(userData.email);
     if (!user) {
-      throw new Error("Not found user");
+      throw new ValidationError("Not found user");
     }
     //パスワードのハッシュ確認
     const isPasswordValid = await comparePassword(
@@ -24,7 +25,7 @@ export class LoginUserUsecase {
       user.password
     );
     if (!isPasswordValid) {
-      throw new Error("Password is incorrect");
+      throw new ValidationError("Password is incorrect");
     }
 
     //JWTの設定

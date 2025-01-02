@@ -58,13 +58,12 @@ user.post("/login", async (c) => {
       expires: new Date(Date.UTC(2000, 11, 24, 10, 30, 59, 900)),
       sameSite: "Lax",
     });
-    // return c.json(201);
-    return c.json({ message: "Login successful", token: tokenString }, 201);
+    return c.json({ message: "Login successful" }, 201);
   } catch (error) {
-    return c.json(
-      { error: error instanceof Error ? error.message : "Failed to login" },
-      500
-    );
+    if (error instanceof ValidationError) {
+      return c.json({ error: error.message }, 400);
+    }
+    return c.json({ error: "Failed to login" }, 500);
   }
 });
 
