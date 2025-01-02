@@ -5,7 +5,7 @@ import { User } from "@prisma/client";
 describe("SignupUserUsecase Test", () => {
   let mockUserGateway: {
     insert: jest.Mock<Promise<User>, [UserPostRequestBody]>;
-    getUserByEmail: jest.Mock<Promise<User>, [string]>;
+    getUserByEmail: jest.Mock<Promise<User | undefined>, [string]>;
   };
   let signupUserUsecase: SignupUserUsecase;
 
@@ -26,6 +26,20 @@ describe("SignupUserUsecase Test", () => {
   it("データが登録される", async () => {
     await signupUserUsecase.run(userData);
     expect(mockUserGateway.insert).toHaveBeenCalledWith(userData);
+  });
+
+  it("既に登録されているメールアドレスの場合はエラーを投げる", async () => {
+    const existingUserData = {
+      id: 1,
+      ...userData,
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
+    mockUserGateway.getUserByEmail.mockResolvedValueOnce(existingUserData);
+    await expect(signupUserUsecase.run(userData)).rejects.toThrow(
+      "This email address is already registered"
+    );
+    expect(mockUserGateway.getUserByEmail).toHaveBeenCalledWith(userData.email);
   });
 
   it("データが登録されない", async () => {

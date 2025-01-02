@@ -79,6 +79,19 @@ describe("signup and login test", () => {
       expect(body.error).toContain("Invalid email");
     });
 
+    it("メールアドレスがユニークキー制約である時は400を返すこと", async () => {
+      mockSignupUserUsecase.run.mockRejectedValueOnce(
+        new ValidationError("This email address is already registered")
+      );
+      const client = testClient(app);
+      const res = await client.api.signup.$post({
+        json: userData,
+      });
+      expect(res.status).toBe(400);
+      const body = (await res.json()) as { error: string };
+      expect(body.error).toContain("This email address is already registered");
+    });
+
     it("ステータスコードが500を返すこと", async () => {
       mockSignupUserUsecase.run.mockRejectedValueOnce(
         new Error("Database connection error")

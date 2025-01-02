@@ -29,8 +29,6 @@ describe("UserGateway", () => {
       expect(prismaMock.user.create).toHaveBeenCalledWith({ data: userData });
     });
 
-    //TODO　ユーニーク制約のテストを書く
-    //下記で同じemaiを登録したらユニークキー制約でエラーになるテストを書いたが、違うemaiで登録してもテストが通ってしまうので改善が必要
     it("同じメールアドレスで登録しようとするとユニーク制約エラーが発生する", async () => {
       const userData: UserPostRequestBody = {
         email: "test@example.com",
@@ -44,12 +42,6 @@ describe("UserGateway", () => {
         created_at: new Date(),
         updated_at: new Date(),
       };
-
-      prismaMock.user.create.mockResolvedValueOnce(expectedUser);
-      const userRecord1 = await userGateway.insert(userData);
-      expect(userRecord1).toEqual(expectedUser);
-      expect(prismaMock.user.create).toHaveBeenCalledWith({ data: userData });
-
       // ユニーク制約違反のエラーをモック
       prismaMock.user.create.mockRejectedValueOnce(
         new Error("Unique constraint failed on the fields: (`email`)")

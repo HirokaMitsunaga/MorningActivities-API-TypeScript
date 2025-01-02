@@ -14,9 +14,6 @@ export class UserGateway implements UserGatewayInterface {
       const user = await this.prisma.user.create({
         data: userData,
       });
-      if (!user) {
-        throw new Error("Failed to create user");
-      }
       return user;
     } catch (error) {
       if (error instanceof Error) {
