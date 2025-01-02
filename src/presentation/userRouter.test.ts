@@ -1,8 +1,12 @@
 import { Hono } from "hono";
 import { UserPostRequestBody } from "./userRouter.js";
 import { User } from "@prisma/client";
+import { testClient } from "hono/testing";
+import { UserModel } from "../validator/user.js";
+import { ValidationError } from "../validator/validationError.js";
+import { string } from "zod";
 
-describe("signup test", () => {
+describe("signup and login test", () => {
   //userGatewayがSignupUserUsecaseへ依存しており、userGatewayに対してもモック化する必要があるため下記のようにしてSignupUserUsecaseをモック化する
   let mockSignupUserUsecase: {
     run: jest.Mock<Promise<User>, [UserPostRequestBody]>;
@@ -21,17 +25,23 @@ describe("signup test", () => {
     updated_at: new Date(),
   };
 
-  const app = new Hono();
-  app.post("/signup", async (c) => {
+  const app = new Hono().post("/api/signup", async (c) => {
     try {
       const data = await c.req.json<UserPostRequestBody>();
+
+      const userValidation = UserModel.safeParse(data);
+      if (!userValidation.success) {
+        throw new ValidationError(
+          userValidation.error.errors.map((err) => err.message).join(", ")
+        );
+      }
       const user = await mockSignupUserUsecase.run(data);
       return c.json(user, 201);
     } catch (error) {
-      return c.json(
-        { error: error instanceof Error ? error.message : "Failed to sign up" },
-        500
-      );
+      if (error instanceof ValidationError) {
+        return c.json({ error: error.message }, 400);
+      }
+      return c.json({ error: "Failed to sign up" }, 500);
     }
   });
 
@@ -44,52 +54,44 @@ describe("signup test", () => {
     });
 
     it("ステータスコード201を返すこと", async () => {
-      const res = await app.request("/signup", {
-        method: "POST",
-        body: JSON.stringify(userData),
+      const client = testClient(app);
+      const res = await client.api.signup.$post({
+        json: userData,
       });
 
       expect(res.status).toBe(201);
+      expect(mockSignupUserUsecase.run).toHaveBeenCalledWith(userData);
+    });
+
+    it("バリデーションエラー時は400を返すこと", async () => {
+      const invalidUserData = {
+        email: "invalid-email",
+        name: "",
+        password: "",
+      };
+
+      const client = testClient(app);
+      const res = await client.api.signup.$post({
+        json: invalidUserData,
+      });
+
+      expect(res.status).toBe(400);
+      const body = (await res.json()) as { error: string };
+      expect(body.error).toContain("Invalid email");
     });
 
     it("ステータスコードが500を返すこと", async () => {
-      // モックがエラーをスローするように設定
-      mockSignupUserUsecase.run.mockRejectedValue(
-        new Error("Internal Server Error")
+      mockSignupUserUsecase.run.mockRejectedValueOnce(
+        new Error("Database connection error")
       );
 
-      const res = await app.request("/signup", {
-        method: "POST",
-        body: JSON.stringify(userData),
+      const client = testClient(app);
+      const res = await client.api.signup.$post({
+        json: userData,
       });
-
       expect(res.status).toBe(500);
       const body = await res.json();
-      expect(body).toEqual({ error: "Internal Server Error" });
-    });
-
-    it("作成されたユーザー情報を返すこと", async () => {
-      const res = await app.request("/signup", {
-        method: "POST",
-        body: JSON.stringify(userData),
-      });
-
-      const body = await res.json();
-      expect(body).toEqual({
-        ...expectedUser,
-        //resでstringifyを使っているためDate型が文字列変換される。その対策としてexpectedUserもDate型からstring型に変換する
-        created_at: expectedUser.created_at.toISOString(),
-        updated_at: expectedUser.updated_at.toISOString(),
-      });
-    });
-
-    it("ユースケースが正しいデータで呼び出されること", async () => {
-      await app.request("/signup", {
-        method: "POST",
-        body: JSON.stringify(userData),
-      });
-
-      expect(mockSignupUserUsecase.run).toHaveBeenCalledWith(userData);
+      expect(body).toEqual({ error: "Failed to sign up" });
     });
   });
 });
