@@ -1,5 +1,5 @@
 import { Context, Next } from "hono";
-import { getCookie, getSignedCookie } from "hono/cookie";
+import { getSignedCookie } from "hono/cookie";
 import { verify } from "hono/jwt";
 
 export async function authMiddleware(c: Context, next: Next) {
