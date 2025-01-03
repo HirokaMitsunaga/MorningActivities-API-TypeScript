@@ -20,8 +20,6 @@ export type TaskPostRequestBody = {
 task.post("/task", async (c) => {
   try {
     const taskData = await c.req.json<TaskPostRequestBody>();
-    //TODO 強制的に型を変更しているので後で修正する
-    // const userId = c.get("userId" as "jwtPayload");
     const payload = c.get("jwtPayload");
     const userId: number = payload.sub;
 
