@@ -55,7 +55,7 @@ user.post("/login", async (c) => {
       domain: "localhost",
       httpOnly: true,
       maxAge: 60 * 60 * 24,
-      expires: new Date(Date.UTC(2000, 11, 24, 10, 30, 59, 900)),
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24時間後
       sameSite: "Lax",
     });
     return c.json({ message: "Login successful" }, 201);

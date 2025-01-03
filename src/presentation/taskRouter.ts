@@ -4,8 +4,10 @@ import { TaskRepository } from "../infrastructure/repository/task/taskRepository
 import { Task } from "../domain/task/task.js";
 import { TaskModel } from "../validator/task.js";
 import { ValidationError } from "../validator/validationError.js";
+import { authMiddleware } from "../middleware/auth.js";
 
 const task = new Hono();
+task.use("/task/*", authMiddleware);
 
 const createTaskUsecase = new CreateTaskUsecase(new TaskRepository());
 

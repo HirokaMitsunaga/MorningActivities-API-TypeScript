@@ -32,7 +32,7 @@ export class LoginUserUsecase {
     const payload = {
       sub: user.id,
       role: "user",
-      exp: Math.floor(Date.now() / 1000) + 60 * 5,
+      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24, // 24時間
     };
     //TODO 後で.envから呼び出すように変更
     const secret = "jwtsecret";
