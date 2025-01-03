@@ -13,7 +13,6 @@ const createTaskUsecase = new CreateTaskUsecase(new TaskRepository());
 
 export type TaskPostRequestBody = {
   title: string;
-  userId: number;
   scheduleMinnutes: number | undefined;
   actualMinutes: number | undefined;
 };
@@ -21,8 +20,15 @@ export type TaskPostRequestBody = {
 task.post("/task", async (c) => {
   try {
     const taskData = await c.req.json<TaskPostRequestBody>();
+    //TODO 強制的に型を変更しているので後で修正する
+    // const userId = c.get("userId" as "jwtPayload");
+    const payload = c.get("jwtPayload");
+    const userId: number = payload.sub;
 
-    const taskValidataiion = TaskModel.safeParse(taskData);
+    const taskValidataiion = TaskModel.safeParse({
+      ...taskData,
+      userId: userId,
+    });
     if (!taskValidataiion.success) {
       throw new ValidationError(
         taskValidataiion.error.errors.map((err) => err.message).join(",")
@@ -32,7 +38,7 @@ task.post("/task", async (c) => {
       new Task(
         undefined,
         taskData.title,
-        taskData.userId,
+        userId,
         taskData.scheduleMinnutes ?? undefined,
         taskData.actualMinutes ?? undefined
       )
