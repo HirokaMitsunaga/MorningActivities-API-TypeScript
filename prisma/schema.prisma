@@ -19,4 +19,16 @@ model User {
   password   String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  tasks Task[]
+}
+
+model Task {
+  id      Int      @id @default(autoincrement())
+  title   String
+  user   User @relation(fields: [user_id], references: [id])
+  user_id  Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  schedule_minnutes  Int?
+  actual_minutes Int?
 }
