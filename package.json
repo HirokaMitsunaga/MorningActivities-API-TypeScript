@@ -8,12 +8,13 @@
     "start": "nodemon",
     "build": "tsc",
     "debug": "tsc && node --inspect dist/index.js",
-    "test": "tsc && jest"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.14",
     "@types/jest": "^29.5.14",
     "@types/morgan": "^1.9.3",
@@ -27,10 +28,13 @@
   "dependencies": {
     "@hono/node-server": "^1.13.7",
     "@prisma/client": "^6.1.0",
+    "bcrypt": "^5.1.1",
     "express": "^4.18.1",
     "express-async-errors": "^3.1.1",
-    "hono": "^4.6.14",
+    "hono": "^4.6.15",
+    "jest-mock-extended": "^4.0.0-beta1",
     "morgan": "^1.10.0",
-    "mysql2": "^2.2.3"
+    "mysql2": "^2.2.3",
+    "zod": "^3.24.1"
   }
 }
