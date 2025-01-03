@@ -30,7 +30,7 @@ user.post("/signup", async (c) => {
     }
     const userRes = await signupUserUsecase.run(userData);
     return c.json(userRes, 201);
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof ValidationError) {
       return c.json({ error: error.message }, 400);
     }

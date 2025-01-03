@@ -1,4 +1,5 @@
 import { PrismaClient, Task } from "@prisma/client";
+import { ValidationError } from "../../../validator/validationError.js";
 
 export class TaskGateway {
   private prisma: PrismaClient;
