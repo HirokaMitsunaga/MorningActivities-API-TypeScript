@@ -17,7 +17,7 @@ export type TaskPostRequestBody = {
 task.post("/task", async (c) => {
   const taskData = await c.req.json<TaskPostRequestBody>();
 
-  const taskRes = await createTaskUsecase.run(
+  const output = await createTaskUsecase.run(
     new Task(
       undefined,
       taskData.title,
@@ -26,7 +26,14 @@ task.post("/task", async (c) => {
       taskData.actualMinutes ?? undefined
     )
   );
-  return c.json(taskRes, 201);
+  const responseBody = {
+    title: output.title,
+    userId: output.userId,
+    scheduleMinnutes: output.scheduleMinnutes,
+    actualMinutes: output.actualMinutes,
+  };
+
+  return c.json(responseBody, 201);
 });
 
 export default task;
