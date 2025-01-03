@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import user, { UserPostRequestBody } from "./userRouter.js";
+import { UserPostRequestBody } from "./userRouter.js";
 import { testClient } from "hono/testing";
 import { deleteCookie } from "hono/cookie";
 
