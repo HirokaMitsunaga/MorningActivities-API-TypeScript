@@ -20,8 +20,8 @@ describe("UserGateway", () => {
       const expectedUser = {
         id: 1,
         ...userData,
-        created_at: new Date(),
-        updated_at: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
       prismaMock.user.create.mockResolvedValue(expectedUser);
       const userRecord = await userGateway.insert(userData);
@@ -39,8 +39,8 @@ describe("UserGateway", () => {
       const expectedUser = {
         id: 1,
         ...userData,
-        created_at: new Date(),
-        updated_at: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
       // ユニーク制約違反のエラーをモック
       prismaMock.user.create.mockRejectedValueOnce(
@@ -72,8 +72,8 @@ describe("UserGateway", () => {
           email: "test@example.com",
           name: "Test User",
           password: "password123",
-          created_at: new Date(),
-          updated_at: new Date(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
         };
         prismaMock.user.findUnique.mockResolvedValue(expectedUser);
         const userRecord = await userGateway.getUserByEmail(email);

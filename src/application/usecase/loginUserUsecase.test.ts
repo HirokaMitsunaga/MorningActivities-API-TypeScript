@@ -26,8 +26,8 @@ describe("LoginUserUsecase Test", () => {
     email: "test@example.com",
     name: "Test User",
     password: "hashedPassword123",
-    created_at: new Date(),
-    updated_at: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   beforeEach(() => {

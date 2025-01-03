@@ -32,8 +32,8 @@ describe("SignupUserUsecase Test", () => {
     const existingUserData = {
       id: 1,
       ...userData,
-      created_at: new Date(),
-      updated_at: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
     mockUserGateway.getUserByEmail.mockResolvedValueOnce(existingUserData);
     await expect(signupUserUsecase.run(userData)).rejects.toThrow(
