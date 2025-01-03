@@ -3,7 +3,7 @@ import { SignupUserUsecase } from "../application/usecase/signupUserUsecase.js";
 import { UserGateway } from "../infrastructure/userGateway.js";
 import { PrismaClient } from "@prisma/client";
 import { LoginUserUsecase } from "../application/usecase/loginUserUsecase.js";
-import { setSignedCookie } from "hono/cookie";
+import { deleteCookie, setSignedCookie } from "hono/cookie";
 import { UserModel } from "../validator/user.js";
 import { ValidationError } from "../validator/validationError.js";
 
@@ -48,7 +48,7 @@ user.post("/login", async (c) => {
       );
     }
     const tokenString = await loginUserUsecase.run(userData);
-    //TODO: 後で.envからcookieSecretを設定するようにする
+    //TODO: 後で.envからcookieSecretとdomainを設定するようにする
     await setSignedCookie(c, "token", tokenString, "cookieSecret", {
       path: "/",
       secure: true,
@@ -64,6 +64,26 @@ user.post("/login", async (c) => {
       return c.json({ error: error.message }, 400);
     }
     return c.json({ error: "Failed to login" }, 500);
+  }
+});
+
+user.post("/logout", async (c) => {
+  try {
+    //TODO: 後で.envからcookieSecretを設定するようにする
+    const isDeleteCookie = deleteCookie(c, "token", {
+      path: "/",
+      secure: true,
+      domain: "localhost",
+    });
+    if (!isDeleteCookie) {
+      throw new Error("Failed to delete cookie");
+    }
+    return c.json({ message: "Logout successful" }, 201);
+  } catch (error) {
+    if (error instanceof Error) {
+      return c.json(error.message, 500);
+    }
+    return c.json({ message: "Failed to logout" }, 500);
   }
 });
 
