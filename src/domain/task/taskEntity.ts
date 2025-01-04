@@ -1,4 +1,4 @@
-export class Task {
+export class TaskEntity {
   constructor(
     private _id: number | undefined,
     private _title: string,

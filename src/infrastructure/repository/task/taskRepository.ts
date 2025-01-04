@@ -1,13 +1,10 @@
-import { Task } from "../../../domain/task/task.js";
+import { TaskEntity } from "../../../domain/task/taskEntity.js";
 import { TaskRepositoryInterface } from "../../../domain/task/taskRepositoryInterface.js";
-import { TaskGateway, TaskGatewayInterface } from "./taskGateway.js";
-import { PrismaClient } from "@prisma/client";
-
-const taskGateway = new TaskGateway(new PrismaClient());
+import { TaskGatewayInterface } from "./taskGateway.js";
 
 export class TaskRepository implements TaskRepositoryInterface {
   constructor(private _taskGateway: TaskGatewayInterface) {}
-  async createTask(task: Task): Promise<Task> {
+  async createTask(task: TaskEntity): Promise<TaskEntity> {
     try {
       const taskRes = await this._taskGateway.createTask(
         task.title,
@@ -15,12 +12,35 @@ export class TaskRepository implements TaskRepositoryInterface {
         task.scheduleMinnutes ?? null,
         task.actualMinutes ?? null
       );
-      return new Task(
+      return new TaskEntity(
         taskRes.id,
         taskRes.title,
         taskRes.userId,
         taskRes.scheduleMinnutes ?? undefined,
         taskRes.actualMinutes ?? undefined
+      );
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Unknown error occurred while create task");
+    }
+  }
+  async getAllTasks(userId: number): Promise<TaskEntity[] | undefined> {
+    try {
+      const tasksRes = await this._taskGateway.getAllTasks(userId);
+      if (!tasksRes) {
+        return undefined;
+      }
+      return tasksRes.map(
+        (taskRes) =>
+          new TaskEntity(
+            taskRes.id,
+            taskRes.title,
+            taskRes.userId,
+            taskRes.scheduleMinnutes ?? undefined,
+            taskRes.actualMinutes ?? undefined
+          )
       );
     } catch (error) {
       if (error instanceof Error) {

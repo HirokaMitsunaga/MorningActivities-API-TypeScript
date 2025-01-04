@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { CreateTaskUsecase } from "../application/usecase/createTaskUsecase.js";
 import { TaskRepository } from "../infrastructure/repository/task/taskRepository.js";
-import { Task } from "../domain/task/task.js";
+import { TaskEntity } from "../domain/task/taskEntity.js";
 import { TaskModel } from "../validator/task.js";
 import { ValidationError } from "../validator/validationError.js";
 import { authMiddleware } from "../middleware/auth.js";
@@ -37,7 +37,7 @@ task.post("/task", async (c) => {
       );
     }
     const output = await createTaskUsecase.run(
-      new Task(
+      new TaskEntity(
         undefined,
         taskData.title,
         userId,

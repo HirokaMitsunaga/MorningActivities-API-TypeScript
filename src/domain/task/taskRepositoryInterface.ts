@@ -1,5 +1,6 @@
-import { Task } from "./task.js";
+import { TaskEntity } from "./taskEntity.js";
 
 export interface TaskRepositoryInterface {
-  createTask(task: Task): Promise<Task>;
+  createTask(task: TaskEntity): Promise<TaskEntity>;
+  getAllTasks(userId: number): Promise<TaskEntity[] | undefined>;
 }

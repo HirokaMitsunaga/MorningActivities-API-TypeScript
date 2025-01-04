@@ -1,14 +1,14 @@
 import { Hono } from "hono";
 import { testClient } from "hono/testing";
 import { ValidationError } from "../validator/validationError.js";
-import { Task } from "../domain/task/task.js";
+import { TaskEntity } from "../domain/task/taskEntity.js";
 import { TaskModel } from "../validator/task.js";
 import { TaskPostRequestBody } from "./taskRouter.js";
 
 describe("createTask test", () => {
   //taskRepositoryがcreateUsecaseへ依存しており、taskRepositoryに対してもモック化する必要があるため下記のようにしてmockCreateTaskUsecaseをモック化する
   let mockCreateTaskUsecase: {
-    run: jest.Mock<Promise<Task>, [Task]>;
+    run: jest.Mock<Promise<TaskEntity>, [TaskEntity]>;
   };
   //入力値
   const task: TaskPostRequestBody = {
@@ -17,9 +17,9 @@ describe("createTask test", () => {
     actualMinutes: 23,
   };
   //mockCreateTaskUsecaseの引数
-  const mockTask = new Task(undefined, "test", 1, 20, 23);
+  const mockTask = new TaskEntity(undefined, "test", 1, 20, 23);
   //mockCreateTaskUsecaseの戻り値
-  const expectedTask = new Task(1, "test", 1, 20, 23);
+  const expectedTask = new TaskEntity(1, "test", 1, 20, 23);
 
   const app = new Hono()
     .use("*", async (c, next) => {
@@ -42,7 +42,7 @@ describe("createTask test", () => {
           );
         }
         const output = await mockCreateTaskUsecase.run(
-          new Task(
+          new TaskEntity(
             undefined,
             taskData.title,
             userId,

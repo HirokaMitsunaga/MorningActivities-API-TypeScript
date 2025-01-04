@@ -1,20 +1,22 @@
-import { Task } from "../../domain/task/task.js";
+import { TaskEntity } from "../../domain/task/taskEntity.js";
 import { CreateTaskUsecase } from "./createTaskUsecase.js";
 
 describe("CreateTaskUsecase Test", () => {
   let mockTaskRepository: {
-    createTask: jest.Mock<Promise<Task>, [Task]>;
+    createTask: jest.Mock<Promise<TaskEntity>, [TaskEntity]>;
+    getAllTasks: jest.Mock<Promise<TaskEntity[] | undefined>, [number]>;
   };
 
   let createTaskUsecase: CreateTaskUsecase;
 
-  const task = new Task(undefined, "test", 1, 20, 23);
+  const task = new TaskEntity(undefined, "test", 1, 20, 23);
 
-  const expectedTask = new Task(1, "test", 1, 20, 23);
+  const expectedTask = new TaskEntity(1, "test", 1, 20, 23);
 
   beforeEach(() => {
     mockTaskRepository = {
       createTask: jest.fn(),
+      getAllTasks: jest.fn(),
     };
     createTaskUsecase = new CreateTaskUsecase(mockTaskRepository);
   });
