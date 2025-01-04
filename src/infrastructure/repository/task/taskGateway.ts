@@ -1,7 +1,15 @@
 import { PrismaClient, Task } from "@prisma/client";
-import { ValidationError } from "../../../validator/validationError.js";
 
-export class TaskGateway {
+export interface TaskGatewayInterface {
+  createTask(
+    title: string,
+    userId: number,
+    scheduleMinnutes: number | null,
+    actualMinutes: number | null
+  ): Promise<Task>;
+}
+
+export class TaskGateway implements TaskGatewayInterface {
   private prisma: PrismaClient;
 
   constructor(prismaClient: PrismaClient) {

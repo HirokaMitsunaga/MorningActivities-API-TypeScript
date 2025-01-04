@@ -5,11 +5,15 @@ import { Task } from "../domain/task/task.js";
 import { TaskModel } from "../validator/task.js";
 import { ValidationError } from "../validator/validationError.js";
 import { authMiddleware } from "../middleware/auth.js";
+import { TaskGateway } from "../infrastructure/repository/task/taskGateway.js";
+import { PrismaClient } from "@prisma/client";
 
 const task = new Hono();
 task.use("/task/*", authMiddleware);
 
-const createTaskUsecase = new CreateTaskUsecase(new TaskRepository());
+const createTaskUsecase = new CreateTaskUsecase(
+  new TaskRepository(new TaskGateway(new PrismaClient()))
+);
 
 export type TaskPostRequestBody = {
   title: string;
