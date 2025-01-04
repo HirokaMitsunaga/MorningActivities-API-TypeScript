@@ -1,7 +1,5 @@
 import { Hono } from "hono";
-import { UserPostRequestBody } from "./userRouter.js";
 import { testClient } from "hono/testing";
-import { UserModel } from "../validator/user.js";
 import { ValidationError } from "../validator/validationError.js";
 import { Task } from "../domain/task/task.js";
 import { TaskModel } from "../validator/task.js";

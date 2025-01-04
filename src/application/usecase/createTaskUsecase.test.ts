@@ -1,15 +1,5 @@
 import { Task } from "../../domain/task/task.js";
-import { TaskRepositoryInterface } from "../../domain/task/taskRepositoryInterface.js";
 import { CreateTaskUsecase } from "./createTaskUsecase.js";
-
-// export class CreateTaskUsecase {
-//   constructor(private _taskRepository: TaskRepositoryInterface) {}
-//   async run(task: Task): Promise<Task> {
-//     const TaskRes = await this._taskRepository.createTask(task);
-
-//     return TaskRes;
-//   }
-// }
 
 describe("CreateTaskUsecase Test", () => {
   let mockTaskRepository: {
