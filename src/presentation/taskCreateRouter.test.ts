@@ -8,7 +8,7 @@ import { TaskModel } from "../validator/task.js";
 import { TaskPostRequestBody } from "./taskRouter.js";
 
 describe("createTask test", () => {
-  //userGatewayがSignupUserUsecaseへ依存しており、userGatewayに対してもモック化する必要があるため下記のようにしてSignupUserUsecaseをモック化する
+  //taskRepositoryがcreateUsecaseへ依存しており、taskRepositoryに対してもモック化する必要があるため下記のようにしてmockCreateTaskUsecaseをモック化する
   let mockCreateTaskUsecase: {
     run: jest.Mock<Promise<Task>, [Task]>;
   };
