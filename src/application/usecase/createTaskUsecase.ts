@@ -4,8 +4,14 @@ import { TaskRepositoryInterface } from "../../domain/task/taskRepositoryInterfa
 export class CreateTaskUsecase {
   constructor(private _taskRepository: TaskRepositoryInterface) {}
   async run(task: Task): Promise<Task> {
-    const TaskRes = await this._taskRepository.createTask(task);
-
-    return TaskRes;
+    try {
+      const TaskRes = await this._taskRepository.createTask(task);
+      return TaskRes;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Unknown error occurred while create task");
+    }
   }
 }
