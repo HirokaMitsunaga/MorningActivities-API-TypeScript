@@ -7,11 +7,18 @@ import { ValidationError } from "../validator/validationError.js";
 import { authMiddleware } from "../middleware/auth.js";
 import { TaskGateway } from "../infrastructure/repository/task/taskGateway.js";
 import { PrismaClient } from "@prisma/client";
+import { GetAllTasksUsecase } from "../application/usecase/getAllTasksUsecase.js";
+import { response } from "express";
+import { error } from "console";
 
 const task = new Hono();
 task.use("/task/*", authMiddleware);
 
 const createTaskUsecase = new CreateTaskUsecase(
+  new TaskRepository(new TaskGateway(new PrismaClient()))
+);
+
+const getAllTasksUsecase = new GetAllTasksUsecase(
   new TaskRepository(new TaskGateway(new PrismaClient()))
 );
 
@@ -53,6 +60,25 @@ task.post("/task", async (c) => {
     };
 
     return c.json(responseBody, 201);
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      return c.json({ error: error.message }, 400);
+    }
+    return c.json({ error: "Failed to create task" }, 500);
+  }
+});
+
+task.get("/task", async (c) => {
+  try {
+    const payload = c.get("jwtPayload");
+    const userId: number = payload.sub;
+
+    const output = await getAllTasksUsecase.run(userId);
+    if (!output) {
+      return c.json({ error: "Not Found Tasks" }, 400);
+    }
+
+    return c.json(output, 201);
   } catch (error) {
     if (error instanceof ValidationError) {
       return c.json({ error: error.message }, 400);

@@ -1,4 +1,5 @@
 import { PrismaClient, Task } from "@prisma/client";
+import task from "../../../presentation/taskRouter.js";
 
 export interface TaskGatewayInterface {
   createTask(
@@ -50,6 +51,7 @@ export class TaskGateway implements TaskGatewayInterface {
       if (!tasks) {
         return undefined;
       }
+      return tasks;
     } catch (error) {
       if (error instanceof Error) {
         throw error;
