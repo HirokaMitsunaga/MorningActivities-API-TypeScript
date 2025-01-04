@@ -15,6 +15,7 @@ describe("LoginUserUsecase Test", () => {
       ]
     >;
     getAllTasks: jest.Mock<Promise<Task[]>, [userId: number]>;
+    getTaskById: jest.Mock<Promise<Task>, [userId: number, taskId: number]>;
   };
   let taskRepository: TaskRepository;
 
@@ -37,6 +38,7 @@ describe("LoginUserUsecase Test", () => {
     mockTaskGateway = {
       createTask: jest.fn(),
       getAllTasks: jest.fn(),
+      getTaskById: jest.fn(),
     };
     taskRepository = new TaskRepository(mockTaskGateway);
   });

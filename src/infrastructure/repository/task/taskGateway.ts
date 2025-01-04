@@ -1,5 +1,4 @@
 import { PrismaClient, Task } from "@prisma/client";
-import task from "../../../presentation/taskRouter.js";
 
 export interface TaskGatewayInterface {
   createTask(
@@ -9,6 +8,7 @@ export interface TaskGatewayInterface {
     actualMinutes: number | null
   ): Promise<Task>;
   getAllTasks(userId: number): Promise<Task[] | undefined>;
+  getTaskById(userId: number, taskId: number): Promise<Task | undefined>;
 }
 
 export class TaskGateway implements TaskGatewayInterface {
@@ -57,6 +57,25 @@ export class TaskGateway implements TaskGatewayInterface {
         throw error;
       }
       throw new Error("Unknown error occurred while get all tasks");
+    }
+  }
+  async getTaskById(userId: number, taskId: number): Promise<Task | undefined> {
+    try {
+      const task = await this.prisma.task.findFirst({
+        where: {
+          id: taskId,
+          userId: userId,
+        },
+      });
+      if (!task) {
+        return undefined;
+      }
+      return task;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Unknown error occurred while get task by id");
     }
   }
 }
