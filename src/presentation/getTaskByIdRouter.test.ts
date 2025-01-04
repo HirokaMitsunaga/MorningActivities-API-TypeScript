@@ -58,7 +58,10 @@ describe("getTaskById test", () => {
         },
       });
       expect(res.status).toBe(201);
-      expect(mockGetTaskByIdUsecase.run).toHaveBeenCalledWith(taskData.userId);
+      expect(mockGetTaskByIdUsecase.run).toHaveBeenCalledWith(
+        taskData.userId,
+        taskData.taskId
+      );
       expect(await res.json()).toEqual(expectedTask);
     });
 
@@ -74,7 +77,7 @@ describe("getTaskById test", () => {
 
       expect(res.status).toBe(400);
       const body = (await res.json()) as { error: string };
-      expect(body.error).toContain("Not found tasks");
+      expect(body.error).toContain("Not found task");
     });
 
     it("ステータスコードが500を返すこと", async () => {
@@ -90,7 +93,7 @@ describe("getTaskById test", () => {
       });
       expect(res.status).toBe(500);
       const body = await res.json();
-      expect(body).toEqual({ error: "Failed to found tasks" });
+      expect(body).toEqual({ error: "Failed to found to get task by id" });
     });
   });
 });

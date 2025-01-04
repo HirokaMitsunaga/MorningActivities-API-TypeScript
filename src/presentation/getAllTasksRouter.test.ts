@@ -2,11 +2,8 @@ import { Hono } from "hono";
 import { testClient } from "hono/testing";
 import { ValidationError } from "../validator/validationError.js";
 import { TaskEntity } from "../domain/task/taskEntity.js";
-import { TaskModel } from "../validator/task.js";
-import task, { TaskPostRequestBody } from "./taskRouter.js";
 
 describe("getAllTasks test", () => {
-  //taskRepositoryがcreateUsecaseへ依存しており、taskRepositoryに対してもモック化する必要があるため下記のようにしてmockGetAllTasksUsecaseをモック化する
   let mockGetAllTasksUsecase: {
     run: jest.Mock<Promise<TaskEntity[] | undefined>, [number]>;
   };
