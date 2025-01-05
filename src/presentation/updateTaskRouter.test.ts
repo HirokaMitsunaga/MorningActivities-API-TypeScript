@@ -5,11 +5,6 @@ import { TaskEntity } from "../domain/task/taskEntity.js";
 import { TaskModel } from "../validator/task.js";
 import { TaskPostRequestBody } from "./taskRouter.js";
 
-declare module "hono/testing" {
-  interface ClientRequestOptions {
-    json?: unknown;
-  }
-}
 describe("updateTask test", () => {
   //taskRepositoryがupdateUsecaseへ依存しており、taskRepositoryに対してもモック化する必要があるため下記のようにしてmockUpdateTaskUsecaseをモック化する
   let mockUpdateTaskUsecase: {

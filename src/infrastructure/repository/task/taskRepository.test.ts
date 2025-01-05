@@ -173,4 +173,31 @@ describe("TaskRepository Test", () => {
       );
     });
   });
+  describe("TaskRepository deleteTask", () => {
+    const taskData = {
+      userId: 1,
+      taskId: 1,
+    };
+    it("タスクの削除に成功する", async () => {
+      mockTaskGateway.deleteTask.mockResolvedValue(undefined);
+      const result = await taskRepository.deleteTask(
+        taskData.userId,
+        taskData.taskId
+      );
+      expect(mockTaskGateway.deleteTask).toHaveBeenCalledWith(
+        taskData.userId,
+        taskData.taskId
+      );
+      expect(result).toBe(undefined);
+    });
+
+    it("タスク作成が失敗", async () => {
+      mockTaskGateway.deleteTask.mockRejectedValueOnce(
+        new Error("Database error")
+      );
+      await expect(
+        taskRepository.deleteTask(taskData.userId, taskData.taskId)
+      ).rejects.toThrow("Database error");
+    });
+  });
 });

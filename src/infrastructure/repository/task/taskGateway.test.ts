@@ -162,4 +162,34 @@ describe("TaskGateway", () => {
       ).rejects.toThrow("Database error");
     });
   });
+  describe("TaskGateway deleteTask", () => {
+    const taskData = {
+      taskId: 1,
+      userId: 2,
+    };
+    it("タスクの削除に成功する", async () => {
+      const expectedTask = {
+        id: 1,
+        title: "test",
+        userId: 2,
+        scheduleMinnutes: 20,
+        actualMinutes: 23,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      prismaMock.task.delete.mockResolvedValue(expectedTask);
+      const taskRecord = await taskGateway.deleteTask(
+        taskData.userId,
+        taskData.taskId
+      );
+      expect(taskRecord).toBe(undefined);
+    });
+
+    it("タスク削除時にDBエラーで失敗する", async () => {
+      prismaMock.task.delete.mockRejectedValueOnce(new Error("Database error"));
+      await expect(
+        taskGateway.deleteTask(taskData.userId, taskData.taskId)
+      ).rejects.toThrow("Database error");
+    });
+  });
 });
