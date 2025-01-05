@@ -1,8 +1,8 @@
 import { Hono } from "hono";
-import { SignupUserUsecase } from "../application/usecase/signupUserUsecase.js";
+import { SignupUserUsecase } from "../application/usecase/auth/signupUserUsecase.js";
 import { UserGateway } from "../infrastructure/userGateway.js";
 import { PrismaClient } from "@prisma/client";
-import { LoginUserUsecase } from "../application/usecase/loginUserUsecase.js";
+import { LoginUserUsecase } from "../application/usecase/auth/loginUserUsecase.js";
 import { deleteCookie, setSignedCookie } from "hono/cookie";
 import { UserModel } from "../validator/user.js";
 import { ValidationError } from "../validator/validationError.js";
@@ -30,7 +30,7 @@ user.post("/signup", async (c) => {
     }
     const userRes = await signupUserUsecase.run(userData);
     return c.json(userRes, 201);
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof ValidationError) {
       return c.json({ error: error.message }, 400);
     }
@@ -55,7 +55,7 @@ user.post("/login", async (c) => {
       domain: "localhost",
       httpOnly: true,
       maxAge: 60 * 60 * 24,
-      expires: new Date(Date.UTC(2000, 11, 24, 10, 30, 59, 900)),
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24時間後
       sameSite: "Lax",
     });
     return c.json({ message: "Login successful" }, 201);

@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { prettyJSON } from "hono/pretty-json";
 import { logger } from "hono/logger";
 import user from "./presentation/userRouter.js";
+import task from "./presentation/taskRouter.js";
 
 const app = new Hono().basePath("/api");
 
@@ -11,6 +12,7 @@ app.use("*", prettyJSON());
 app.use(logger());
 
 app.route("/", user);
+app.route("/", task);
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");

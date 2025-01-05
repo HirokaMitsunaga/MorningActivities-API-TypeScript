@@ -20,8 +20,8 @@ describe("signup and login test", () => {
   const expectedUser = {
     id: 1,
     ...userData,
-    created_at: new Date(),
-    updated_at: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   const app = new Hono().post("/api/signup", async (c) => {

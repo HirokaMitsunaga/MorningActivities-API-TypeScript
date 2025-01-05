@@ -1,10 +1,10 @@
-import { UserPostRequestBody } from "../../presentation/userRouter.js";
-import { comparePassword } from "../../utils/hashPassword.js";
+import { UserPostRequestBody } from "../../../presentation/userRouter.js";
+import { comparePassword } from "../../../utils/hashPassword.js";
 import { LoginUserUsecase } from "./loginUserUsecase.js";
 import { User } from "@prisma/client";
 
 // モジュールのモック化
-jest.mock("../../utils/hashPassword.js");
+jest.mock("../../../utils/hashPassword.js");
 // モック化された関数の取得
 const mockComparePassword = jest.mocked(comparePassword);
 
@@ -26,8 +26,8 @@ describe("LoginUserUsecase Test", () => {
     email: "test@example.com",
     name: "Test User",
     password: "hashedPassword123",
-    created_at: new Date(),
-    updated_at: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   beforeEach(() => {
