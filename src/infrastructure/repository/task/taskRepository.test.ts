@@ -33,6 +33,7 @@ describe("TaskRepository Test", () => {
   let taskRepository: TaskRepository;
 
   const task = new TaskEntity(undefined, "test", 1, 20, 20);
+  const updateTask = new TaskEntity(1, "test", 1, 20, 20);
 
   const expectedDomainTask = new TaskEntity(1, "test", 1, 20, 20);
 
@@ -140,6 +141,28 @@ describe("TaskRepository Test", () => {
       await expect(
         taskRepository.getTaskById(taskData.userId, taskData.taskId)
       ).rejects.toThrow("Database error");
+    });
+  });
+  describe("TaskRepository updateTask", () => {
+    it("タスク更新が成功する", async () => {
+      mockTaskGateway.updateTask.mockResolvedValue(expectedPrismaTask);
+      const result = await taskRepository.updateTask(updateTask);
+      expect(mockTaskGateway.updateTask).toHaveBeenCalledWith(
+        updateTask.id,
+        updateTask.title,
+        updateTask.userId,
+        updateTask.scheduleMinnutes ?? null,
+        updateTask.actualMinutes ?? null
+      );
+      expect(result).toEqual(expectedDomainTask);
+    });
+    it("タスク作成が失敗", async () => {
+      mockTaskGateway.updateTask.mockRejectedValueOnce(
+        new Error("Database error")
+      );
+      await expect(taskRepository.updateTask(updateTask)).rejects.toThrow(
+        "Database error"
+      );
     });
   });
 });

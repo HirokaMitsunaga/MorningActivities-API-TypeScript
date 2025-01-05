@@ -11,6 +11,14 @@ describe("TaskGateway", () => {
     actualMinutes: 23,
   };
 
+  const updataTaskData = {
+    id: 1,
+    title: "test",
+    userId: 2,
+    scheduleMinnutes: 20,
+    actualMinutes: 23,
+  };
+
   beforeAll(() => {
     taskGateway = new TaskGateway(prismaMock);
   });
@@ -108,6 +116,49 @@ describe("TaskGateway", () => {
       );
       await expect(
         taskGateway.getTaskById(taskData.userId, taskData.taskId)
+      ).rejects.toThrow("Database error");
+    });
+  });
+  describe("TaskGateway updateTask", () => {
+    it("タスクの更新に成功する", async () => {
+      const expectedTask = {
+        id: 1,
+        ...taskData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      prismaMock.task.update.mockResolvedValue(expectedTask);
+      const taskRecord = await taskGateway.updateTask(
+        updataTaskData.id,
+        updataTaskData.title,
+        updataTaskData.userId,
+        updataTaskData.scheduleMinnutes,
+        updataTaskData.actualMinutes
+      );
+      expect(taskRecord).toEqual(expectedTask);
+      expect(prismaMock.task.update).toHaveBeenCalledWith({
+        where: {
+          id: updataTaskData.id,
+          userId: updataTaskData.userId,
+        },
+        data: {
+          title: updataTaskData.title,
+          scheduleMinnutes: updataTaskData.scheduleMinnutes,
+          actualMinutes: updataTaskData.actualMinutes,
+        },
+      });
+    });
+
+    it("タスク作成時にDBエラーで失敗する", async () => {
+      prismaMock.task.update.mockRejectedValueOnce(new Error("Database error"));
+      await expect(
+        taskGateway.updateTask(
+          updataTaskData.id,
+          updataTaskData.title,
+          updataTaskData.userId,
+          updataTaskData.scheduleMinnutes,
+          updataTaskData.actualMinutes
+        )
       ).rejects.toThrow("Database error");
     });
   });
