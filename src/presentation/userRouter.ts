@@ -1,8 +1,8 @@
 import { Hono } from "hono";
-import { SignupUserUsecase } from "../application/usecase/signupUserUsecase.js";
+import { SignupUserUsecase } from "../application/usecase/auth/signupUserUsecase.js";
 import { UserGateway } from "../infrastructure/userGateway.js";
 import { PrismaClient } from "@prisma/client";
-import { LoginUserUsecase } from "../application/usecase/loginUserUsecase.js";
+import { LoginUserUsecase } from "../application/usecase/auth/loginUserUsecase.js";
 import { deleteCookie, setSignedCookie } from "hono/cookie";
 import { UserModel } from "../validator/user.js";
 import { ValidationError } from "../validator/validationError.js";

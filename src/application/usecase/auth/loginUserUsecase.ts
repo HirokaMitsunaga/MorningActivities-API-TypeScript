@@ -1,9 +1,9 @@
-import { UserModel } from "../../validator/user.js";
-import { UserPostRequestBody } from "../../presentation/userRouter.js";
-import { comparePassword } from "../../utils/hashPassword.js";
-import { UserGatewayInterface } from "../../domain/userGatewayInterface.js";
+import { UserModel } from "../../../validator/user.js";
+import { UserPostRequestBody } from "../../../presentation/userRouter.js";
+import { comparePassword } from "../../../utils/hashPassword.js";
+import { UserGatewayInterface } from "../../../domain/userGatewayInterface.js";
 import { sign } from "hono/jwt";
-import { ValidationError } from "../../validator/validationError.js";
+import { ValidationError } from "../../../validator/validationError.js";
 
 export class LoginUserUsecase {
   constructor(private _userGateway: UserGatewayInterface) {}

@@ -1,4 +1,4 @@
-import { TaskEntity } from "../../domain/task/taskEntity.js";
+import { TaskEntity } from "../../../domain/task/taskEntity.js";
 import { GetTaskByIdUsecase } from "./getTaskByIdUsecase.js";
 
 describe("GetTaskByIdUsecase Test", () => {

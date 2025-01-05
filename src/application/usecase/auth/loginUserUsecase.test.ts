@@ -1,5 +1,5 @@
-import { UserPostRequestBody } from "../../presentation/userRouter.js";
-import { comparePassword } from "../../utils/hashPassword.js";
+import { UserPostRequestBody } from "../../../presentation/userRouter.js";
+import { comparePassword } from "../../../utils/hashPassword.js";
 import { LoginUserUsecase } from "./loginUserUsecase.js";
 import { User } from "@prisma/client";
 

@@ -1,5 +1,5 @@
-import { TaskEntity } from "../../domain/task/taskEntity.js";
-import { TaskRepositoryInterface } from "../../domain/task/taskRepositoryInterface.js";
+import { TaskEntity } from "../../../domain/task/taskEntity.js";
+import { TaskRepositoryInterface } from "../../../domain/task/taskRepositoryInterface.js";
 
 export class GetTaskByIdUsecase {
   constructor(private _taskRepository: TaskRepositoryInterface) {}
