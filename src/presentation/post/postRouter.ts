@@ -1,16 +1,16 @@
 import { Hono } from "hono";
-import { CreatePostUsecase } from "../application/usecase/post/createPostUsecase.js";
-import { PostRepository } from "../infrastructure/repository/post/postRepository.js";
-import { PostEntity } from "../domain/post/postEntity.js";
-import { PostModel } from "../validator/post.js";
-import { ValidationError } from "../validator/validationError.js";
-import { authMiddleware } from "../middleware/auth.js";
-import { PostGateway } from "../infrastructure/repository/post/postGateway.js";
+import { CreatePostUsecase } from "../../application/usecase/post/createPostUsecase.js";
+import { PostRepository } from "../../infrastructure/repository/post/postRepository.js";
+import { PostEntity } from "../../domain/post/postEntity.js";
+import { PostModel } from "../../validator/post.js";
+import { ValidationError } from "../../validator/validationError.js";
+import { authMiddleware } from "../../middleware/auth.js";
+import { PostGateway } from "../../infrastructure/repository/post/postGateway.js";
 import { PrismaClient } from "@prisma/client";
-import { GetAllPostsUsecase } from "../application/usecase/post/getAllPostsUsecase.js";
-import { GetPostByIdUsecase } from "../application/usecase/post/getPostByIdUsecase.js";
-import { UpdatePostUsecase } from "../application/usecase/post/updatePostUsecase.js";
-import { DeletePostUsecase } from "../application/usecase/post/deletePostUsecase.js";
+import { GetAllPostsUsecase } from "../../application/usecase/post/getAllPostsUsecase.js";
+import { GetPostByIdUsecase } from "../../application/usecase/post/getPostByIdUsecase.js";
+import { UpdatePostUsecase } from "../../application/usecase/post/updatePostUsecase.js";
+import { DeletePostUsecase } from "../../application/usecase/post/deletePostUsecase.js";
 
 const post = new Hono();
 post.use("/post/*", authMiddleware);
