@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { testClient } from "hono/testing";
-import { ValidationError } from "../validator/validationError.js";
-import { TaskEntity } from "../domain/task/taskEntity.js";
+import { ValidationError } from "../../validator/validationError.js";
+import { TaskEntity } from "../../domain/task/taskEntity.js";
 
 describe("getAllTasks test", () => {
   let mockGetAllTasksUsecase: {

@@ -1,16 +1,16 @@
 import { Hono } from "hono";
-import { CreateTaskUsecase } from "../application/usecase/task/createTaskUsecase.js";
-import { TaskRepository } from "../infrastructure/repository/task/taskRepository.js";
-import { TaskEntity } from "../domain/task/taskEntity.js";
-import { TaskModel } from "../validator/task.js";
-import { ValidationError } from "../validator/validationError.js";
-import { authMiddleware } from "../middleware/auth.js";
-import { TaskGateway } from "../infrastructure/repository/task/taskGateway.js";
+import { CreateTaskUsecase } from "../../application/usecase/task/createTaskUsecase.js";
+import { TaskRepository } from "../../infrastructure/repository/task/taskRepository.js";
+import { TaskEntity } from "../../domain/task/taskEntity.js";
+import { TaskModel } from "../../validator/task.js";
+import { ValidationError } from "../../validator/validationError.js";
+import { authMiddleware } from "../../middleware/auth.js";
+import { TaskGateway } from "../../infrastructure/repository/task/taskGateway.js";
 import { PrismaClient } from "@prisma/client";
-import { GetAllTasksUsecase } from "../application/usecase/task/getAllTasksUsecase.js";
-import { GetTaskByIdUsecase } from "../application/usecase/task/getTaskByIdUsecase.js";
-import { UpdateTaskUsecase } from "../application/usecase/task/updateTaskUsecase.js";
-import { DeleteTaskUsecase } from "../application/usecase/task/deleteTaskUsecase.js";
+import { GetAllTasksUsecase } from "../../application/usecase/task/getAllTasksUsecase.js";
+import { GetTaskByIdUsecase } from "../../application/usecase/task/getTaskByIdUsecase.js";
+import { UpdateTaskUsecase } from "../../application/usecase/task/updateTaskUsecase.js";
+import { DeleteTaskUsecase } from "../../application/usecase/task/deleteTaskUsecase.js";
 
 const task = new Hono();
 task.use("/task/*", authMiddleware);

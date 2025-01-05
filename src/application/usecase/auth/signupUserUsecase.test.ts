@@ -1,4 +1,4 @@
-import { UserPostRequestBody } from "../../../presentation/userRouter.js";
+import { UserPostRequestBody } from "../../../presentation/auth/userRouter.js";
 import { SignupUserUsecase } from "./signupUserUsecase.js";
 import { User } from "@prisma/client";
 

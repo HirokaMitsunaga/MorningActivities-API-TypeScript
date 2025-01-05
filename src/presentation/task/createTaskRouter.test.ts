@@ -1,8 +1,8 @@
 import { Hono } from "hono";
 import { testClient } from "hono/testing";
-import { ValidationError } from "../validator/validationError.js";
-import { TaskEntity } from "../domain/task/taskEntity.js";
-import { TaskModel } from "../validator/task.js";
+import { ValidationError } from "../../validator/validationError.js";
+import { TaskEntity } from "../../domain/task/taskEntity.js";
+import { TaskModel } from "../../validator/task.js";
 import { TaskPostRequestBody } from "./taskRouter.js";
 
 describe("createTask test", () => {

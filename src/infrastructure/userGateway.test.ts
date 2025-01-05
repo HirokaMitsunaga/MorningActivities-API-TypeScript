@@ -1,5 +1,5 @@
 import { UserGateway } from "./userGateway.js";
-import { UserPostRequestBody } from "../presentation/userRouter.js";
+import { UserPostRequestBody } from "../presentation/auth/userRouter.js";
 import { prismaMock } from "../singleton.js";
 
 describe("UserGateway", () => {
