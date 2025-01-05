@@ -13,8 +13,6 @@ describe("createPost test", () => {
   //入力値
   const post: PostPostRequestBody = {
     sentence: "test",
-    scheduleMinnutes: 20,
-    actualMinutes: 23,
   };
   //mockCreatePostUsecaseの引数
   const mockPost = new PostEntity(undefined, "test", 1);
@@ -78,8 +76,6 @@ describe("createPost test", () => {
     it("バリデーションエラー時は400を返すこと", async () => {
       const invalidPost: PostPostRequestBody = {
         sentence: "testtesttesttesttesttesttesttesttesttesttesttesttest",
-        scheduleMinnutes: 20,
-        actualMinutes: 23,
       };
       const client = testClient(app);
       const res = await client.api.post.$post({

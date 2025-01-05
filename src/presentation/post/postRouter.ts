@@ -37,8 +37,6 @@ const deletePostUsecase = new DeletePostUsecase(
 
 export type PostPostRequestBody = {
   sentence: string;
-  scheduleMinnutes: number | undefined;
-  actualMinutes: number | undefined;
 };
 
 post.post("/post", async (c) => {

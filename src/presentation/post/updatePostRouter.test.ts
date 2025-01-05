@@ -12,8 +12,6 @@ describe("updatePost test", () => {
   //入力値
   const post: PostPostRequestBody = {
     sentence: "test",
-    scheduleMinnutes: 20,
-    actualMinutes: 23,
   };
   //mockUpdatePostUsecaseの引数
   const mockPost = new PostEntity(1, "test", 1);
@@ -82,15 +80,11 @@ describe("updatePost test", () => {
     it("バリデーションエラー時は400を返すこと", async () => {
       const invalidPost: PostPostRequestBody = {
         sentence: "testtesttesttesttesttesttesttesttesttesttesttesttest",
-        scheduleMinnutes: 20,
-        actualMinutes: 23,
       };
       const res = await app.request("/api/post/1", {
         method: "PUT",
         body: JSON.stringify({
           sentence: invalidPost.sentence,
-          scheduleMinnutes: invalidPost.scheduleMinnutes,
-          actualMinutes: invalidPost.actualMinutes,
         }),
       });
 
