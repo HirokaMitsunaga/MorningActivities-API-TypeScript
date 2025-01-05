@@ -1,5 +1,5 @@
 import { PrismaClient, User } from "@prisma/client";
-import { UserPostRequestBody } from "../presentation/userRouter.js";
+import { UserPostRequestBody } from "../presentation/auth/userRouter.js";
 import { UserGatewayInterface } from "../domain/userGatewayInterface.js";
 
 export class UserGateway implements UserGatewayInterface {

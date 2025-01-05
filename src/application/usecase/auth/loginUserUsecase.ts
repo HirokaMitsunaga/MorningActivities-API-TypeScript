@@ -1,5 +1,5 @@
 import { UserModel } from "../../../validator/user.js";
-import { UserPostRequestBody } from "../../../presentation/userRouter.js";
+import { UserPostRequestBody } from "../../../presentation/auth/userRouter.js";
 import { comparePassword } from "../../../utils/hashPassword.js";
 import { UserGatewayInterface } from "../../../domain/userGatewayInterface.js";
 import { sign } from "hono/jwt";

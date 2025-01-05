@@ -1,8 +1,8 @@
 import { Hono } from "hono";
 import { UserPostRequestBody } from "./userRouter.js";
 import { testClient } from "hono/testing";
-import { UserModel } from "../validator/user.js";
-import { ValidationError } from "../validator/validationError.js";
+import { UserModel } from "../../validator/user.js";
+import { ValidationError } from "../../validator/validationError.js";
 import { setSignedCookie } from "hono/cookie";
 
 describe("login and login test", () => {

@@ -1,8 +1,5 @@
 import { Hono } from "hono";
-import { ValidationError } from "../validator/validationError.js";
-import { TaskEntity } from "../domain/task/taskEntity.js";
-import { TaskModel } from "../validator/task.js";
-import { TaskPostRequestBody } from "./taskRouter.js";
+import { ValidationError } from "../../validator/validationError.js";
 
 describe("deleteTask test", () => {
   //taskRepositoryがdeleteUsecaseへ依存しており、taskRepositoryに対してもモック化する必要があるため下記のようにしてmockDeleteTaskUsecaseをモック化する

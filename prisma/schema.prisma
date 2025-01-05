@@ -20,6 +20,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tasks Task[]
+  posts Post[]
 }
 
 model Task {
@@ -31,4 +32,13 @@ model Task {
   updatedAt DateTime @updatedAt
   scheduleMinnutes  Int?
   actualMinutes Int?
+}
+
+model Post {
+  id      Int      @id @default(autoincrement())
+  sentence   String
+  user   User @relation(fields: [userId], references: [id])
+  userId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
