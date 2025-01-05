@@ -4,7 +4,7 @@ import { LoginUserUsecase } from "./loginUserUsecase.js";
 import { User } from "@prisma/client";
 
 // モジュールのモック化
-jest.mock("../../utils/hashPassword.js");
+jest.mock("../../../utils/hashPassword.js");
 // モック化された関数の取得
 const mockComparePassword = jest.mocked(comparePassword);
 
