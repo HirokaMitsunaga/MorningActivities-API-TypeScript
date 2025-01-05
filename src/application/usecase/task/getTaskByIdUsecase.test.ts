@@ -6,6 +6,7 @@ describe("GetTaskByIdUsecase Test", () => {
     createTask: jest.Mock<Promise<TaskEntity>, [TaskEntity]>;
     getAllTasks: jest.Mock<Promise<TaskEntity[] | undefined>, [number]>;
     getTaskById: jest.Mock<Promise<TaskEntity | undefined>, [number]>;
+    updateTask: jest.Mock<Promise<TaskEntity>, [TaskEntity]>;
   };
 
   let getTaskByIdUsecase: GetTaskByIdUsecase;
@@ -19,6 +20,7 @@ describe("GetTaskByIdUsecase Test", () => {
       createTask: jest.fn(),
       getAllTasks: jest.fn(),
       getTaskById: jest.fn(),
+      updateTask: jest.fn(),
     };
     getTaskByIdUsecase = new GetTaskByIdUsecase(mockTaskRepository);
   });

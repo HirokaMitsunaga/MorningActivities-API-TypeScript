@@ -9,6 +9,13 @@ export interface TaskGatewayInterface {
   ): Promise<Task>;
   getAllTasks(userId: number): Promise<Task[] | undefined>;
   getTaskById(userId: number, taskId: number): Promise<Task | undefined>;
+  updateTask(
+    taskId: number,
+    title: string,
+    userId: number,
+    scheduleMinnutes: number | null,
+    actualMinutes: number | null
+  ): Promise<Task>;
 }
 
 export class TaskGateway implements TaskGatewayInterface {
@@ -76,6 +83,33 @@ export class TaskGateway implements TaskGatewayInterface {
         throw error;
       }
       throw new Error("Unknown error occurred while get task by id");
+    }
+  }
+  async updateTask(
+    taskId: number,
+    title: string,
+    userId: number,
+    scheduleMinnutes: number | null,
+    actualMinutes: number | null
+  ): Promise<Task> {
+    try {
+      const task = await this.prisma.task.update({
+        where: {
+          id: taskId,
+          userId: userId,
+        },
+        data: {
+          title: title,
+          scheduleMinnutes: scheduleMinnutes,
+          actualMinutes: actualMinutes,
+        },
+      });
+      return task;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Unknown error occurred while update task");
     }
   }
 }

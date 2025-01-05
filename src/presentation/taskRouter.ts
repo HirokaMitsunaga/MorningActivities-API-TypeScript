@@ -9,6 +9,7 @@ import { TaskGateway } from "../infrastructure/repository/task/taskGateway.js";
 import { PrismaClient } from "@prisma/client";
 import { GetAllTasksUsecase } from "../application/usecase/task/getAllTasksUsecase.js";
 import { GetTaskByIdUsecase } from "../application/usecase/task/getTaskByIdUsecase.js";
+import { UpdateTaskUsecase } from "../application/usecase/task/updateTaskUsecase.js";
 
 const task = new Hono();
 task.use("/task/*", authMiddleware);
@@ -22,6 +23,10 @@ const getAllTasksUsecase = new GetAllTasksUsecase(
 );
 
 const getTaskByIdUsecase = new GetTaskByIdUsecase(
+  new TaskRepository(new TaskGateway(new PrismaClient()))
+);
+
+const updateTaskUsecase = new UpdateTaskUsecase(
   new TaskRepository(new TaskGateway(new PrismaClient()))
 );
 
@@ -107,6 +112,47 @@ task.get("/task/:id", async (c) => {
       return c.json({ error: error.message }, 400);
     }
     return c.json({ error: "Failed to found to get task by id" }, 500);
+  }
+});
+
+task.put("/task/:id", async (c) => {
+  try {
+    const taskData = await c.req.json<TaskPostRequestBody>();
+    const payload = c.get("jwtPayload");
+    const userId: number = payload.sub;
+    const taskId = Number(c.req.param("id"));
+
+    const taskValidataiion = TaskModel.safeParse({
+      ...taskData,
+      userId: userId,
+    });
+    if (!taskValidataiion.success) {
+      throw new ValidationError(
+        taskValidataiion.error.errors.map((err) => err.message).join(",")
+      );
+    }
+    const output = await updateTaskUsecase.run(
+      new TaskEntity(
+        taskId,
+        taskData.title,
+        userId,
+        taskData.scheduleMinnutes ?? undefined,
+        taskData.actualMinutes ?? undefined
+      )
+    );
+    const responseBody = {
+      title: output.title,
+      userId: output.userId,
+      scheduleMinnutes: output.scheduleMinnutes,
+      actualMinutes: output.actualMinutes,
+    };
+
+    return c.json(responseBody, 201);
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      return c.json({ error: error.message }, 400);
+    }
+    return c.json({ error: "Failed to update task" }, 500);
   }
 });
 

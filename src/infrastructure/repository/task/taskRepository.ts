@@ -1,4 +1,3 @@
-import { time } from "console";
 import { TaskEntity } from "../../../domain/task/taskEntity.js";
 import { TaskRepositoryInterface } from "../../../domain/task/taskRepositoryInterface.js";
 import { TaskGatewayInterface } from "./taskGateway.js";
@@ -50,7 +49,6 @@ export class TaskRepository implements TaskRepositoryInterface {
       throw new Error("Unknown error occurred while create task");
     }
   }
-
   async getTaskById(
     userId: number,
     taskId: number
@@ -65,7 +63,34 @@ export class TaskRepository implements TaskRepositoryInterface {
         taskRes.title,
         taskRes.userId,
         taskRes.scheduleMinnutes ?? undefined,
-        taskRes.scheduleMinnutes ?? undefined
+        taskRes.actualMinutes ?? undefined
+      );
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Unknown error occurred while get task by id");
+    }
+  }
+  async updateTask(task: TaskEntity): Promise<TaskEntity> {
+    try {
+      if (typeof task.id !== "number") {
+        throw new Error("taskId is required and must be a number");
+      }
+      const taskRes = await this._taskGateway.updateTask(
+        task.id,
+        task.title,
+        task.userId,
+        task.scheduleMinnutes ?? null,
+        task.actualMinutes ?? null
+      );
+
+      return new TaskEntity(
+        taskRes.id,
+        taskRes.title,
+        taskRes.userId,
+        taskRes.scheduleMinnutes ?? undefined,
+        taskRes.actualMinutes ?? undefined
       );
     } catch (error) {
       if (error instanceof Error) {
