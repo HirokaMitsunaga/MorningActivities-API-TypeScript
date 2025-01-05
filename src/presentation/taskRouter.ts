@@ -10,6 +10,7 @@ import { PrismaClient } from "@prisma/client";
 import { GetAllTasksUsecase } from "../application/usecase/task/getAllTasksUsecase.js";
 import { GetTaskByIdUsecase } from "../application/usecase/task/getTaskByIdUsecase.js";
 import { UpdateTaskUsecase } from "../application/usecase/task/updateTaskUsecase.js";
+import { DeleteTaskUsecase } from "../application/usecase/task/deleteTaskUsecase.js";
 
 const task = new Hono();
 task.use("/task/*", authMiddleware);
@@ -27,6 +28,10 @@ const getTaskByIdUsecase = new GetTaskByIdUsecase(
 );
 
 const updateTaskUsecase = new UpdateTaskUsecase(
+  new TaskRepository(new TaskGateway(new PrismaClient()))
+);
+
+const deleteTaskUsecase = new DeleteTaskUsecase(
   new TaskRepository(new TaskGateway(new PrismaClient()))
 );
 
@@ -153,6 +158,26 @@ task.put("/task/:id", async (c) => {
       return c.json({ error: error.message }, 400);
     }
     return c.json({ error: "Failed to update task" }, 500);
+  }
+});
+
+task.delete("/task/:id", async (c) => {
+  try {
+    const payload = c.get("jwtPayload");
+    const userId: number = payload.sub;
+    const taskId = Number(c.req.param("id"));
+
+    await deleteTaskUsecase.run(userId, taskId);
+
+    return c.json({ success: `delete task id = ${taskId}` }, 201);
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      return c.json({ error: error.message }, 400);
+    }
+    if (error instanceof Error) {
+      return c.json({ error: error.message }, 500);
+    }
+    return c.json({ error: "Failed to delete task" }, 500);
   }
 });
 

@@ -16,6 +16,7 @@ export interface TaskGatewayInterface {
     scheduleMinnutes: number | null,
     actualMinutes: number | null
   ): Promise<Task>;
+  deleteTask(taskId: number, userId: number): Promise<void>;
 }
 
 export class TaskGateway implements TaskGatewayInterface {
@@ -110,6 +111,21 @@ export class TaskGateway implements TaskGatewayInterface {
         throw error;
       }
       throw new Error("Unknown error occurred while update task");
+    }
+  }
+  async deleteTask(userId: number, taskId: number): Promise<void> {
+    try {
+      await this.prisma.task.delete({
+        where: {
+          id: taskId,
+          userId: userId,
+        },
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Unknown error occurred while delete task");
     }
   }
 }

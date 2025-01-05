@@ -29,6 +29,7 @@ describe("TaskRepository Test", () => {
         actualMinutes: number | null
       ]
     >;
+    deleteTask: jest.Mock<Promise<void>, [userId: number, taskId: number]>;
   };
   let taskRepository: TaskRepository;
 
@@ -54,6 +55,7 @@ describe("TaskRepository Test", () => {
       getAllTasks: jest.fn(),
       getTaskById: jest.fn(),
       updateTask: jest.fn(),
+      deleteTask: jest.fn(),
     };
     taskRepository = new TaskRepository(mockTaskGateway);
   });

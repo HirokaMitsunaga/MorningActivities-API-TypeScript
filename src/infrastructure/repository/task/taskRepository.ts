@@ -99,4 +99,14 @@ export class TaskRepository implements TaskRepositoryInterface {
       throw new Error("Unknown error occurred while get task by id");
     }
   }
+  async deleteTask(userId: number, taskId: number): Promise<void> {
+    try {
+      await this._taskGateway.deleteTask(userId, taskId);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Unknown error occurred while delete task");
+    }
+  }
 }
