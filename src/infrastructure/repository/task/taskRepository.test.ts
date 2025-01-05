@@ -156,6 +156,12 @@ describe("TaskRepository Test", () => {
       );
       expect(result).toEqual(expectedDomainTask);
     });
+    it("taskIdがundefined型の場合、エラーを返す", async () => {
+      const undefinedTaskId = new TaskEntity(undefined, "test", 1, 20, 20);
+      await expect(taskRepository.updateTask(undefinedTaskId)).rejects.toThrow(
+        "taskId is required and must be a number"
+      );
+    });
     it("タスク作成が失敗", async () => {
       mockTaskGateway.updateTask.mockRejectedValueOnce(
         new Error("Database error")
