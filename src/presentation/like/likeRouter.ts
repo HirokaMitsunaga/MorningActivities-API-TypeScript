@@ -6,16 +6,20 @@ import { likeGateway } from "../../infrastructure/repository/like/likeGateway.js
 import { PrismaClient } from "@prisma/client";
 import { DeleteLikeUsecase } from "../../application/usecase/like/deleteLikeUsecase.js";
 import { ValidationError } from "../../validator/validationError.js";
+import { PostRepository } from "../../infrastructure/repository/post/postRepository.js";
+import { PostGateway } from "../../infrastructure/repository/post/postGateway.js";
 
 const like = new Hono();
 like.use("/like/*", authMiddleware);
 
 const addLikeUsecase = new AddLikeUsecase(
-  new LikeRepository(new likeGateway(new PrismaClient()))
+  new LikeRepository(new likeGateway(new PrismaClient())),
+  new PostRepository(new PostGateway(new PrismaClient()))
 );
 
 const deleteLikeUsecase = new DeleteLikeUsecase(
-  new LikeRepository(new likeGateway(new PrismaClient()))
+  new LikeRepository(new likeGateway(new PrismaClient())),
+  new PostRepository(new PostGateway(new PrismaClient()))
 );
 
 export type LikePostRequestBody = {
@@ -51,7 +55,7 @@ like.delete("/like/:id", async (c) => {
     const userId: number = payload.sub;
     const likeId = Number(c.req.param("id"));
 
-    await deleteLikeUsecase.run(likeId);
+    await deleteLikeUsecase.run(userId, likeId);
 
     return c.json({ success: `delete post id = ${likeId}` }, 201);
   } catch (error) {
