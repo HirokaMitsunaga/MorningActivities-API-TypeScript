@@ -2,7 +2,7 @@ export class LikeEntity {
   constructor(
     private _id: number | undefined,
     private _userId: number,
-    private _postId: string
+    private _postId: number
   ) {}
   get id() {
     return this._id;
