@@ -17,6 +17,24 @@ export class LikeRepository implements LikeRepositoryInterface {
       throw new Error("Unknown error occurred while delete like");
     }
   }
+  async getLike(
+    userId: number,
+    postId: number
+  ): Promise<LikeEntity | undefined> {
+    try {
+      const likeRes = await this._likeGateway.getLike(userId, postId);
+      if (!likeRes) {
+        return undefined;
+      }
+      return new LikeEntity(likeRes.id, likeRes.userId, likeRes.postId);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Unknown error occurred while get like");
+    }
+  }
+
   async deleteLike(postid: number): Promise<void> {
     try {
       await this._likeGateway.deleteLike(postid);

@@ -8,6 +8,7 @@ import { DeleteLikeUsecase } from "../../application/usecase/like/deleteLikeUsec
 import { ValidationError } from "../../validator/validationError.js";
 import { PostRepository } from "../../infrastructure/repository/post/postRepository.js";
 import { PostGateway } from "../../infrastructure/repository/post/postGateway.js";
+import { DomainError } from "../../validator/domainError.js";
 
 const like = new Hono();
 like.use("/like/*", authMiddleware);
@@ -45,6 +46,9 @@ like.post("/like", async (c) => {
     if (error instanceof ValidationError) {
       return c.json({ error: error.message }, 400);
     }
+    if (error instanceof DomainError) {
+      return c.json({ error: error.message }, 400);
+    }
     return c.json({ error: "Failed to create post" }, 500);
   }
 });
@@ -60,6 +64,9 @@ like.delete("/like/:id", async (c) => {
     return c.json({ success: `delete post id = ${likeId}` }, 201);
   } catch (error) {
     if (error instanceof ValidationError) {
+      return c.json({ error: error.message }, 400);
+    }
+    if (error instanceof DomainError) {
       return c.json({ error: error.message }, 400);
     }
     if (error instanceof Error) {
