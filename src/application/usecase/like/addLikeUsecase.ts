@@ -10,11 +10,12 @@ export class AddLikeUsecase {
   ) {}
   async run(userId: number, postId: number) {
     try {
+      //ポストがない時はバリデーションエラーを返す
       const post = await this._postRepository.getPostById(userId, postId);
       if (!post) {
         throw new ValidationError("Not found post");
       }
-      //一つの投稿にひとつのいいねしかできない
+      //一人のユーザが同じ投稿に2回いいねしたらドメインエラーにする
       const isLike = await this._likeRepository.getLike(userId, postId);
       if (isLike) {
         throw new DomainError("Only one like is allowed.");

@@ -10,11 +10,12 @@ export class DeleteLikeUsecase {
   ) {}
   async run(userId: number, postId: number): Promise<void> {
     try {
+      //ポストがない時はバリデーションエラーを返す
       const post = await this._postRepository.getPostById(userId, postId);
       if (!post) {
         throw new ValidationError("Not found post");
       }
-      //いいねしていない時はエラーにする
+      //いいねしていない時はドメインエラーにする
       const isLike = await this._likeRepository.getLike(userId, postId);
       if (!isLike) {
         throw new DomainError("You have not liked this post");
