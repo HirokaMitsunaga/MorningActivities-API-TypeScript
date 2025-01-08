@@ -18,12 +18,15 @@ export class AddLikeUsecase {
       //一人のユーザが同じ投稿に2回いいねしたらドメインエラーにする
       const isLike = await this._likeRepository.getLike(userId, postId);
       if (isLike) {
-        throw new DomainError("Only one like is allowed.");
+        throw new DomainError("Only one like is allowed");
       }
       const like = await this._likeRepository.addLike(userId, postId);
       return like;
     } catch (error) {
       if (error instanceof Error) {
+        throw error;
+      }
+      if (error instanceof ValidationError) {
         throw error;
       }
       throw new Error("Unknown error occurred while add like");
