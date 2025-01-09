@@ -11,7 +11,7 @@ export class DeleteLikeUsecase {
   async run(userId: number, postId: number): Promise<void> {
     try {
       //ポストがない時はバリデーションエラーを返す
-      const post = await this._postRepository.getPostById(userId, postId);
+      const post = await this._postRepository.getPostByOnlyPostId(postId);
       if (!post) {
         throw new ValidationError("Not found post");
       }
