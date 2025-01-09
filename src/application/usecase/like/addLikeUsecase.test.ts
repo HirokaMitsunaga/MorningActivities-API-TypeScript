@@ -31,7 +31,7 @@ describe("addLikeUsecsse Test", () => {
       getLike: jest.fn(),
     };
     mockPostRepository = {
-      getPostById: jest.fn(),
+      getPostByOnlyPostId: jest.fn(),
     };
 
     addLikeUsecase = new AddLikeUsecase(
@@ -42,7 +42,9 @@ describe("addLikeUsecsse Test", () => {
 
   describe("正常系", () => {
     it("いいねができる", async () => {
-      (mockPostRepository.getPostById as jest.Mock).mockReturnValue(postResult);
+      (mockPostRepository.getPostByOnlyPostId as jest.Mock).mockReturnValue(
+        postResult
+      );
       (mockLikeRepository.getLike as jest.Mock).mockReturnValue(undefined);
       const likeResult = await addLikeUsecase.run(
         likeData.userId,
@@ -53,15 +55,14 @@ describe("addLikeUsecsse Test", () => {
         likeData.userId,
         likeData.postId
       );
-      expect(mockPostRepository.getPostById).toHaveBeenCalledWith(
-        likeData.userId,
+      expect(mockPostRepository.getPostByOnlyPostId).toHaveBeenCalledWith(
         likeData.postId
       );
     });
   });
   describe("異常系", () => {
     it("いいねしたい投稿が見つからない時、バリデーションエラーを返す", async () => {
-      (mockPostRepository.getPostById as jest.Mock).mockReturnValue(
+      (mockPostRepository.getPostByOnlyPostId as jest.Mock).mockReturnValue(
         postNotFoundResult
       );
       (mockLikeRepository.getLike as jest.Mock).mockReturnValue(undefined);
@@ -70,7 +71,9 @@ describe("addLikeUsecsse Test", () => {
       ).rejects.toThrow(new ValidationError("Not found post"));
     });
     it("同じユーザが一つの投稿へ2回いいねをしたらドメインエラーを返す", async () => {
-      (mockPostRepository.getPostById as jest.Mock).mockReturnValue(postResult);
+      (mockPostRepository.getPostByOnlyPostId as jest.Mock).mockReturnValue(
+        postResult
+      );
       (mockLikeRepository.getLike as jest.Mock).mockReturnValue(
         likeDuplicationResult
       );
@@ -79,7 +82,9 @@ describe("addLikeUsecsse Test", () => {
       ).rejects.toThrow(new DomainError("Only one like is allowed"));
     });
     it("DBエラーでいいねが失敗する", async () => {
-      (mockPostRepository.getPostById as jest.Mock).mockReturnValue(postResult);
+      (mockPostRepository.getPostByOnlyPostId as jest.Mock).mockReturnValue(
+        postResult
+      );
       (mockLikeRepository.getLike as jest.Mock).mockReturnValue(undefined);
       const likeResult = await addLikeUsecase.run(
         likeData.userId,

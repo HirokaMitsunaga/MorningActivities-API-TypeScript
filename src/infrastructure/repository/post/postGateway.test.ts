@@ -171,4 +171,36 @@ describe("PostGateway", () => {
       ).rejects.toThrow("Database error");
     });
   });
+  describe("PostGateway getPostByOnlyPostId", () => {
+    const postData = {
+      postId: 1,
+    };
+    it("投稿の取得に成功する", async () => {
+      const expectedPost = {
+        id: 1,
+        sentence: "test",
+        userId: 2,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      prismaMock.post.findFirst.mockResolvedValue(expectedPost);
+      const postRecord = await postGateway.getPostByOnlyPostId(postData.postId);
+      expect(postRecord).toEqual(expectedPost);
+    });
+    it("投稿が存在しない", async () => {
+      prismaMock.post.findFirst.mockResolvedValue(null);
+      expect(await postGateway.getPostByOnlyPostId(postData.postId)).toEqual(
+        undefined
+      );
+    });
+
+    it("投稿作成時にDBエラーで失敗する", async () => {
+      prismaMock.post.findFirst.mockRejectedValueOnce(
+        new Error("Database error")
+      );
+      await expect(
+        postGateway.getPostByOnlyPostId(postData.postId)
+      ).rejects.toThrow("Database error");
+    });
+  });
 });

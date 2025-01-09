@@ -6,6 +6,7 @@ export interface PostGatewayInterface {
   getPostById(userId: number, postId: number): Promise<Post | undefined>;
   updatePost(postId: number, sentence: string, userId: number): Promise<Post>;
   deletePost(postId: number, userId: number): Promise<void>;
+  getPostByOnlyPostId(postId: number): Promise<Post | undefined>;
 }
 
 export class PostGateway implements PostGatewayInterface {
@@ -104,6 +105,25 @@ export class PostGateway implements PostGatewayInterface {
         throw error;
       }
       throw new Error("Unknown error occurred while delete post");
+    }
+  }
+
+  async getPostByOnlyPostId(postId: number): Promise<Post | undefined> {
+    try {
+      const post = await this.prisma.post.findFirst({
+        where: {
+          id: postId,
+        },
+      });
+      if (!post) {
+        return undefined;
+      }
+      return post;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Unknown error occurred while get post by only id");
     }
   }
 }

@@ -11,7 +11,7 @@ export class AddLikeUsecase {
   async run(userId: number, postId: number) {
     try {
       //ポストがない時はバリデーションエラーを返す
-      const post = await this._postRepository.getPostById(userId, postId);
+      const post = await this._postRepository.getPostByOnlyPostId(postId);
       if (!post) {
         throw new ValidationError("Not found post");
       }
