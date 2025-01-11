@@ -17,7 +17,7 @@ app.route("/", task);
 app.route("/", post);
 app.route("/", like);
 
-const port = 3000;
+const port = 3001;
 console.log(`Server is running on http://localhost:${port}`);
 
 serve({
