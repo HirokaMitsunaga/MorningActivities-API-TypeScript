@@ -1,3 +1,4 @@
+import { LikeEntity } from "../../../domain/like/likeEntity.js";
 import { LikeRepositoryInterface } from "../../../domain/like/likeRepositoryInterface.js";
 import { PostRepositoryInterface } from "../../../domain/post/postRepositoryInterface.js";
 import { DomainError } from "../../../validator/domainError.js";
@@ -8,7 +9,7 @@ export class AddLikeUsecase {
     private _likeRepository: LikeRepositoryInterface,
     private _postRepository: PostRepositoryInterface
   ) {}
-  async run(userId: number, postId: number) {
+  async run(userId: number, postId: number): Promise<LikeEntity> {
     try {
       //ポストがない時はバリデーションエラーを返す
       const post = await this._postRepository.getPostByOnlyPostId(postId);

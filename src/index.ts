@@ -17,10 +17,6 @@ app.route("/", task);
 app.route("/", post);
 app.route("/", like);
 
-app.get("/", (c) => {
-  return c.text("Hello Hono!");
-});
-
 const port = 3000;
 console.log(`Server is running on http://localhost:${port}`);
 
