@@ -81,4 +81,18 @@ export class PostRepository implements PostRepositoryInterface {
       throw new Error("Unknown error occurred while delete post");
     }
   }
+  async getPostByOnlyPostId(postId: number): Promise<PostEntity | undefined> {
+    try {
+      const postRes = await this._postGateway.getPostByOnlyPostId(postId);
+      if (!postRes) {
+        return undefined;
+      }
+      return new PostEntity(postRes.id, postRes.sentence, postRes.userId);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Unknown error occurred while get post by only post id");
+    }
+  }
 }

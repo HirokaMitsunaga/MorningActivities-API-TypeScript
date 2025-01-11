@@ -8,6 +8,7 @@ describe("UpdatePostUsecase Test", () => {
     getPostById: jest.Mock<Promise<PostEntity | undefined>, [number]>;
     updatePost: jest.Mock<Promise<PostEntity>, [PostEntity]>;
     deletePost: jest.Mock<Promise<void>, [number, number]>;
+    getPostByOnlyPostId: jest.Mock<Promise<PostEntity | undefined>, [number]>;
   };
 
   let updatePostUsecase: UpdatePostUsecase;
@@ -25,6 +26,7 @@ describe("UpdatePostUsecase Test", () => {
       getPostById: jest.fn(),
       updatePost: jest.fn(),
       deletePost: jest.fn(),
+      getPostByOnlyPostId: jest.fn(),
     };
     updatePostUsecase = new UpdatePostUsecase(mockPostRepository);
   });

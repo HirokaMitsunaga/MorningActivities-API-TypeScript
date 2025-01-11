@@ -75,7 +75,7 @@ describe("createPost test", () => {
 
     it("バリデーションエラー時は400を返すこと", async () => {
       const invalidPost: PostPostRequestBody = {
-        sentence: "testtesttesttesttesttesttesttesttesttesttesttesttest",
+        sentence: "",
       };
       const client = testClient(app);
       const res = await client.api.post.$post({
@@ -84,7 +84,7 @@ describe("createPost test", () => {
 
       expect(res.status).toBe(400);
       const body = (await res.json()) as { error: string };
-      expect(body.error).toContain("Title is must be 20");
+      expect(body.error).toContain("Sentence is not empty");
     });
 
     it("ステータスコードが500を返すこと", async () => {

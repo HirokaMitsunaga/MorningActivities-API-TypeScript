@@ -16,6 +16,7 @@ describe("PostRepository Test", () => {
       [postId: number, sentence: string, userId: number]
     >;
     deletePost: jest.Mock<Promise<void>, [userId: number, postId: number]>;
+    getPostByOnlyPostId: jest.Mock<Promise<Post | undefined>, [postId: number]>;
   };
   let postRepository: PostRepository;
 
@@ -40,6 +41,7 @@ describe("PostRepository Test", () => {
       getPostById: jest.fn(),
       updatePost: jest.fn(),
       deletePost: jest.fn(),
+      getPostByOnlyPostId: jest.fn(),
     };
     postRepository = new PostRepository(mockPostGateway);
   });
@@ -175,6 +177,32 @@ describe("PostRepository Test", () => {
       );
       await expect(
         postRepository.deletePost(postData.userId, postData.postId)
+      ).rejects.toThrow("Database error");
+    });
+  });
+  describe("PostRepository getPostByOnlyPostId", () => {
+    const postData = {
+      postId: 1,
+    };
+    it("投稿の取得に成功する", async () => {
+      mockPostGateway.getPostByOnlyPostId.mockResolvedValue(expectedPrismaPost);
+      const result = await postRepository.getPostByOnlyPostId(postData.postId);
+      expect(mockPostGateway.getPostByOnlyPostId).toHaveBeenCalledWith(
+        postData.postId
+      );
+      expect(result).toEqual(expectedDomainPost);
+    });
+    it("投稿が存在しない", async () => {
+      mockPostGateway.getPostByOnlyPostId.mockResolvedValue(undefined);
+      const result = await postRepository.getPostByOnlyPostId(postData.postId);
+      expect(result).toEqual(undefined);
+    });
+    it("投稿作成が失敗", async () => {
+      mockPostGateway.getPostByOnlyPostId.mockRejectedValueOnce(
+        new Error("Database error")
+      );
+      await expect(
+        postRepository.getPostByOnlyPostId(postData.postId)
       ).rejects.toThrow("Database error");
     });
   });

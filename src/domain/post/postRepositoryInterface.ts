@@ -6,4 +6,5 @@ export interface PostRepositoryInterface {
   getPostById(userId: number, postId: number): Promise<PostEntity | undefined>;
   updatePost(post: PostEntity): Promise<PostEntity>;
   deletePost(userId: number, postId: number): Promise<void>;
+  getPostByOnlyPostId(postId: number): Promise<PostEntity | undefined>;
 }
