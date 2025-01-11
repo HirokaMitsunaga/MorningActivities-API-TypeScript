@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { authMiddleware } from "../../middleware/auth.js";
 import { AddLikeUsecase } from "../../application/usecase/like/addLikeUsecase.js";
 import { LikeRepository } from "../../infrastructure/repository/like/likeRepository.js";
-import { likeGateway } from "../../infrastructure/repository/like/likeGateway.js";
+import { LikeGateway } from "../../infrastructure/repository/like/likeGateway.js";
 import { PrismaClient } from "@prisma/client";
 import { DeleteLikeUsecase } from "../../application/usecase/like/deleteLikeUsecase.js";
 import { ValidationError } from "../../validator/validationError.js";
@@ -14,12 +14,12 @@ const like = new Hono();
 like.use("/like/*", authMiddleware);
 
 const addLikeUsecase = new AddLikeUsecase(
-  new LikeRepository(new likeGateway(new PrismaClient())),
+  new LikeRepository(new LikeGateway(new PrismaClient())),
   new PostRepository(new PostGateway(new PrismaClient()))
 );
 
 const deleteLikeUsecase = new DeleteLikeUsecase(
-  new LikeRepository(new likeGateway(new PrismaClient())),
+  new LikeRepository(new LikeGateway(new PrismaClient())),
   new PostRepository(new PostGateway(new PrismaClient()))
 );
 
