@@ -6,7 +6,7 @@ export interface likeGatewayInterFace {
   deleteLike(likeId: number): Promise<void>;
 }
 
-export class likeGateway implements likeGatewayInterFace {
+export class LikeGateway implements likeGatewayInterFace {
   private prisma: PrismaClient;
 
   constructor(prismaClient: PrismaClient) {
