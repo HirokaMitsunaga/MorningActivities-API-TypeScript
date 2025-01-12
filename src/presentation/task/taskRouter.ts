@@ -96,7 +96,7 @@ task.get("/task", async (c) => {
     if (error instanceof ValidationError) {
       return c.json({ error: error.message }, 400);
     }
-    return c.json({ error: "Failed to found tasks" }, 500);
+    return c.json({ error: "Failed to get tasks" }, 500);
   }
 });
 

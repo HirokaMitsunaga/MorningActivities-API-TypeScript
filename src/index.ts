@@ -6,11 +6,16 @@ import user from "./presentation/auth/userRouter.js";
 import task from "./presentation/task/taskRouter.js";
 import post from "./presentation/post/postRouter.js";
 import like from "./presentation/like/likeRouter.js";
+import { corsMiddleware } from "./middleware/cors.js";
+import { csrfMiddleware } from "./middleware/csrf.js";
+import { every, some } from "hono/combine";
+
 const app = new Hono().basePath("/api");
 
 //ミドルウェアの設定
+app.use("*", every(corsMiddleware, csrfMiddleware));
 app.use("*", prettyJSON());
-app.use(logger());
+app.use("*", logger());
 
 app.route("/", user);
 app.route("/", task);
