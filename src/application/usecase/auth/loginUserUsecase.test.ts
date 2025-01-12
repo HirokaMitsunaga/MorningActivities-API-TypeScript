@@ -4,7 +4,7 @@ import { comparePassword } from "../../../utils/hashPassword.js";
 import { LoginUserUsecase } from "./loginUserUsecase.js";
 import { User } from "@prisma/client";
 import { getContext } from "hono/context-storage";
-import { Logger } from "../../../utils/Logger.js";
+import { Logger } from "../../../utils/logger.js";
 
 // モジュールのモック化
 jest.mock("../../../utils/hashPassword.js");
@@ -51,10 +51,11 @@ describe("LoginUserUsecase Test", () => {
       error: jest.fn(),
     } as any;
 
+    loginUserUsecase = new LoginUserUsecase(
+      mockUserGateway,
+      mockLoggerInstance
+    );
     // LoggerのgetInstanceメソッドをモック化
-    jest.spyOn(Logger, "getInstance").mockReturnValue(mockLoggerInstance);
-
-    loginUserUsecase = new LoginUserUsecase(mockUserGateway);
     mockComparePassword.mockReset();
 
     // getContextのモックを設定

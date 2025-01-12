@@ -6,11 +6,15 @@ import { LoginUserUsecase } from "../../application/usecase/auth/loginUserUsecas
 import { deleteCookie, setSignedCookie } from "hono/cookie";
 import { UserModel } from "../../validator/user.js";
 import { ValidationError } from "../../validator/validationError.js";
+import { diContainer } from "../../dependencyInjection/inversify.config.js";
+import { TYPES } from "../../dependencyInjection/types.js";
 
 const user = new Hono();
 const prismaClient = new PrismaClient();
 const signupUserUsecase = new SignupUserUsecase(new UserGateway(prismaClient));
-const loginUserUsecase = new LoginUserUsecase(new UserGateway(prismaClient));
+const loginUserUsecase = diContainer.get<LoginUserUsecase>(
+  TYPES.LoginUserUsecase
+);
 
 export type UserPostRequestBody = {
   email: string;
