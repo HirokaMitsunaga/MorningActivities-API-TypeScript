@@ -1,3 +1,5 @@
+import "reflect-metadata";
+import { injectable, inject } from "inversify";
 import { UserModel } from "../../../validator/user.js";
 import { UserPostRequestBody } from "../../../presentation/auth/userRouter.js";
 import { comparePassword } from "../../../utils/hashPassword.js";
@@ -6,11 +8,16 @@ import { sign } from "hono/jwt";
 import { ValidationError } from "../../../validator/validationError.js";
 import { getContext } from "hono/context-storage";
 import { Logger } from "../../../utils/Logger.js";
+import { TYPES } from "../../../dependencyInjection/types.js";
 
 export class LoginUserUsecase {
   private logger = Logger.getInstance();
 
-  constructor(private _userGateway: UserGatewayInterface) {}
+  // constructor(private _userGateway: UserGatewayInterface) {}
+  constructor(
+    @inject(TYPES.UserGateway) private _userGateway: UserGatewayInterface
+  ) {}
+
   async run(userData: UserPostRequestBody): Promise<string> {
     const context = getContext();
     const requestId = context?.get("requestId");
