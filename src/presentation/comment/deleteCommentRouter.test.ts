@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { CommentPostRequestBody } from "./commentRouter.js";
+import comment, { CommentPostRequestBody } from "./commentRouter.js";
 import { ValidationError } from "../../validator/validationError.js";
 import { DomainError } from "../../validator/domainError.js";
 import { CommentEntity } from "../../domain/comment/commentEntity.js";
@@ -12,9 +12,10 @@ describe("deleteCommentRouter", () => {
   //入力値
   const inputCommentData: CommentPostRequestBody = {
     postId: 1,
+    comment: "test",
   };
   //出力値
-  const outputCommentData = new CommentEntity(1, 1, 1);
+  const outputCommentData = new CommentEntity(1, "test", 1, 1);
   const app = new Hono()
     .use("*", async (c, next) => {
       c.set("jwtPayload", { sub: 1 });
@@ -31,6 +32,7 @@ describe("deleteCommentRouter", () => {
 
         const responseBody = {
           id: output.id,
+          comment: output.comment,
           userId: output.userId,
           postId: output.postId,
         };

@@ -6,23 +6,25 @@ import { CommentRepository } from "./commentRepository.js";
 describe("commentRepository Test", () => {
   let mockCommentGateway: Partial<commentGatewayInterFace>;
   let commentRepository: CommentRepository;
+  //入力値
+  const commentRepositoryInputData = {
+    userId: 1,
+    postId: 2,
+    comment: "test",
+  };
+  //出力値
+  const commentRepositoryOutputData = new CommentEntity(1, "test", 1, 2);
+  //モックの期待値
+  const commentGatewayResult: Comment = {
+    id: 1,
+    userId: 1,
+    comment: "test",
+    postId: 2,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
 
   describe("commentRepository addComment", () => {
-    //入力値
-    const commentRepositoryInputData = {
-      userId: 1,
-      postId: 2,
-    };
-    //出力値
-    const commentRepositoryOutputData = new CommentEntity(1, 1, 2);
-    //モックの期待値
-    const commentGatewayResult: Comment = {
-      id: 1,
-      userId: 1,
-      postId: 2,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
     beforeEach(() => {
       mockCommentGateway = {
         addComment: jest.fn(),
@@ -31,18 +33,20 @@ describe("commentRepository Test", () => {
         mockCommentGateway as commentGatewayInterFace
       );
     });
-    it("いいねができる", async () => {
+    it("コメントができる", async () => {
       (mockCommentGateway.addComment as jest.Mock).mockReturnValue(
         commentGatewayResult
       );
       const comment = await commentRepository.addComment(
         commentRepositoryInputData.userId,
-        commentRepositoryInputData.postId
+        commentRepositoryInputData.postId,
+        commentRepositoryInputData.comment
       );
       expect(comment).toEqual(commentRepositoryOutputData);
       expect(mockCommentGateway.addComment).toHaveBeenCalledWith(
         commentRepositoryInputData.userId,
-        commentRepositoryInputData.postId
+        commentRepositoryInputData.postId,
+        commentRepositoryInputData.comment
       );
     });
     it("DB接続エラーで失敗する", async () => {
@@ -60,16 +64,7 @@ describe("commentRepository Test", () => {
       userId: 1,
       postId: 2,
     };
-    //出力値
-    const commentRepositoryOutputData = new CommentEntity(1, 1, 2);
-    //モックの期待値
-    const commentGatewayResult: Comment = {
-      id: 1,
-      userId: 1,
-      postId: 2,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+
     beforeEach(() => {
       mockCommentGateway = {
         getComment: jest.fn(),
@@ -78,7 +73,7 @@ describe("commentRepository Test", () => {
         mockCommentGateway as commentGatewayInterFace
       );
     });
-    it("いいねを取得できる", async () => {
+    it("コメントを取得できる", async () => {
       (mockCommentGateway.getComment as jest.Mock).mockReturnValue(
         commentGatewayResult
       );
@@ -92,7 +87,7 @@ describe("commentRepository Test", () => {
         commentRepositoryInputData.postId
       );
     });
-    it("いいねが存在しない", async () => {
+    it("コメントが存在しない", async () => {
       (mockCommentGateway.getComment as jest.Mock).mockReturnValue(undefined);
       const comment = await commentRepository.getComment(
         commentRepositoryInputData.userId,

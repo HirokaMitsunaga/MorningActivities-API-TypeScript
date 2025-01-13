@@ -1,7 +1,8 @@
 import { Comment, PrismaClient } from "@prisma/client";
+import comment from "../../../presentation/comment/commentRouter.js";
 
 export interface commentGatewayInterFace {
-  addComment(userId: number, postId: number): Promise<Comment>;
+  addComment(userId: number, postId: number, comment: string): Promise<Comment>;
   getComment(userId: number, commentId: number): Promise<Comment | undefined>;
   deleteComment(commentId: number): Promise<void>;
 }
@@ -13,15 +14,20 @@ export class CommentGateway implements commentGatewayInterFace {
     this.prisma = prismaClient;
   }
 
-  async addComment(userId: number, postId: number): Promise<Comment> {
+  async addComment(
+    userId: number,
+    postId: number,
+    comment: string
+  ): Promise<Comment> {
     try {
-      const comment = await this.prisma.comment.create({
+      const commentRes = await this.prisma.comment.create({
         data: {
           userId: userId,
           postId: postId,
+          comment: comment,
         },
       });
-      return comment;
+      return commentRes;
     } catch (error) {
       if (error instanceof Error) {
         throw error;
@@ -34,16 +40,16 @@ export class CommentGateway implements commentGatewayInterFace {
     postId: number
   ): Promise<Comment | undefined> {
     try {
-      const comment = await this.prisma.comment.findFirst({
+      const commentRes = await this.prisma.comment.findFirst({
         where: {
           postId: postId,
           userId: userId,
         },
       });
-      if (!comment) {
+      if (!commentRes) {
         return undefined;
       }
-      return comment;
+      return commentRes;
     } catch (error) {
       if (error instanceof Error) {
         throw error;

@@ -9,7 +9,11 @@ export class AddCommentUsecase {
     private _commentRepository: CommentRepositoryInterface,
     private _postRepository: PostRepositoryInterface
   ) {}
-  async run(userId: number, postId: number): Promise<CommentEntity> {
+  async run(
+    userId: number,
+    postId: number,
+    comment: string
+  ): Promise<CommentEntity> {
     try {
       //ポストがない時はバリデーションエラーを返す
       const post = await this._postRepository.getPostByOnlyPostId(postId);
@@ -17,8 +21,12 @@ export class AddCommentUsecase {
         throw new ValidationError("Not found post");
       }
 
-      const comment = await this._commentRepository.addComment(userId, postId);
-      return comment;
+      const commentRes = await this._commentRepository.addComment(
+        userId,
+        postId,
+        comment
+      );
+      return commentRes;
     } catch (error) {
       if (error instanceof Error) {
         throw error;

@@ -8,6 +8,7 @@ describe("commentGateway", () => {
   //入力値
   const commentInputData = {
     id: 1,
+    comment: "test",
     userId: 1,
     postId: 1,
   };
@@ -24,28 +25,31 @@ describe("commentGateway", () => {
     beforeEach(() => {
       commentGateway = new CommentGateway(prismaMock);
     });
-    it("いいねが成功する", async () => {
+    it("コメントが成功する", async () => {
       prismaMock.comment.create.mockResolvedValueOnce(commentOutputData);
       const comment = await commentGateway.addComment(
         commentInputData.userId,
-        commentInputData.postId
+        commentInputData.postId,
+        commentInputData.comment
       );
       expect(comment).toEqual(commentOutputData);
       expect(prismaMock.comment.create).toHaveBeenCalledWith({
         data: {
           userId: commentInputData.userId,
           postId: commentInputData.postId,
+          comment: commentInputData.comment,
         },
       });
     });
-    it("いいねが失敗する", async () => {
+    it("コメントが失敗する", async () => {
       prismaMock.comment.create.mockRejectedValueOnce(
         new Error("Database error")
       );
       await expect(
         commentGateway.addComment(
           commentInputData.userId,
-          commentInputData.postId
+          commentInputData.postId,
+          commentInputData.comment
         )
       ).rejects.toThrow("Database error");
     });
@@ -54,7 +58,7 @@ describe("commentGateway", () => {
     beforeEach(() => {
       commentGateway = new CommentGateway(prismaMock);
     });
-    it("いいねの取得が成功する", async () => {
+    it("コメントの取得が成功する", async () => {
       prismaMock.comment.findFirst.mockResolvedValueOnce(commentOutputData);
       const comment = await commentGateway.getComment(
         commentInputData.userId,
@@ -68,7 +72,7 @@ describe("commentGateway", () => {
         },
       });
     });
-    it("いいねが存在しない", async () => {
+    it("コメントが存在しない", async () => {
       prismaMock.comment.findFirst.mockResolvedValueOnce(null);
       const comment = await commentGateway.getComment(
         commentInputData.userId,
@@ -82,7 +86,7 @@ describe("commentGateway", () => {
         },
       });
     });
-    it("いいねの取得が失敗する", async () => {
+    it("コメントの取得が失敗する", async () => {
       prismaMock.comment.findFirst.mockRejectedValueOnce(
         new Error("Database error")
       );
@@ -98,7 +102,7 @@ describe("commentGateway", () => {
     beforeEach(() => {
       commentGateway = new CommentGateway(prismaMock);
     });
-    it("いいねの削除が成功する", async () => {
+    it("コメントの削除が成功する", async () => {
       prismaMock.comment.delete.mockResolvedValueOnce(commentOutputData);
       const comment = await commentGateway.deleteComment(commentInputData.id);
       expect(comment).toBe(undefined);
@@ -108,7 +112,7 @@ describe("commentGateway", () => {
         },
       });
     });
-    it("いいねの削除失敗する", async () => {
+    it("コメントの削除が失敗する", async () => {
       prismaMock.comment.delete.mockRejectedValueOnce(
         new Error("Database error")
       );

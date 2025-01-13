@@ -1,16 +1,26 @@
 import { CommentEntity } from "../../../domain/comment/commentEntity.js";
 import { CommentRepositoryInterface } from "../../../domain/comment/commentRepositoryInterface.js";
+import comment from "../../../presentation/comment/commentRouter.js";
 import { commentGatewayInterFace } from "./commentGateway.js";
 
 export class CommentRepository implements CommentRepositoryInterface {
   constructor(private _commentGateway: commentGatewayInterFace) {}
 
-  async addComment(userId: number, postId: number): Promise<CommentEntity> {
+  async addComment(
+    userId: number,
+    postId: number,
+    comment: string
+  ): Promise<CommentEntity> {
     try {
-      const commentRes = await this._commentGateway.addComment(userId, postId);
+      const commentRes = await this._commentGateway.addComment(
+        userId,
+        postId,
+        comment
+      );
 
       return new CommentEntity(
         commentRes.id,
+        commentRes.comment,
         commentRes.userId,
         commentRes.postId
       );
@@ -32,6 +42,7 @@ export class CommentRepository implements CommentRepositoryInterface {
       }
       return new CommentEntity(
         commentRes.id,
+        commentRes.comment,
         commentRes.userId,
         commentRes.postId
       );

@@ -18,8 +18,8 @@ describe("deleteCommentUsecsse Test", () => {
   };
 
   //正常系
-  const postFoundResult = new PostEntity(1, "テスト", 3);
-  const commentFoundResult = new CommentEntity(1, 1, 2);
+  const postFoundResult = new PostEntity(1, "test", 3);
+  const commentFoundResult = new CommentEntity(1, "test", 1, 2);
 
   //投稿が見つからない
   const postNotFoundResult = undefined;

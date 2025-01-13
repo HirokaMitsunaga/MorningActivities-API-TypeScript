@@ -7,14 +7,15 @@ import { testClient } from "hono/testing";
 
 describe("commentRouter", () => {
   let mockAddCommentUsecase: {
-    run: jest.Mock<Promise<CommentEntity>, [number, number]>;
+    run: jest.Mock<Promise<CommentEntity>, [number, number, string]>;
   };
   //入力値
   const inputCommentData: CommentPostRequestBody = {
     postId: 1,
+    comment: "test",
   };
   //出力値
-  const outputCommentData = new CommentEntity(1, 1, 1);
+  const outputCommentData = new CommentEntity(1, "test", 1, 1);
   const app = new Hono()
     .use("*", async (c, next) => {
       c.set("jwtPayload", { sub: 1 });
@@ -27,7 +28,11 @@ describe("commentRouter", () => {
         const userId: number = payload.sub;
 
         //バリデーション
-        const output = await mockAddCommentUsecase.run(userId, postData.postId);
+        const output = await mockAddCommentUsecase.run(
+          userId,
+          postData.postId,
+          postData.comment
+        );
 
         const responseBody = {
           id: output.id,
@@ -61,7 +66,8 @@ describe("commentRouter", () => {
       expect(res.status).toBe(201);
       expect(mockAddCommentUsecase.run).toHaveBeenCalledWith(
         outputCommentData.userId,
-        outputCommentData.postId
+        outputCommentData.postId,
+        outputCommentData.comment
       );
     });
     it("ステータスコードが500を返すこと", async () => {

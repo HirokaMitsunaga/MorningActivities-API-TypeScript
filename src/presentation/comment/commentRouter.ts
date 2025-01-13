@@ -25,6 +25,7 @@ const deleteCommentUsecase = new DeleteCommentUsecase(
 
 export type CommentPostRequestBody = {
   postId: number;
+  comment: string;
 };
 
 comment.post("/comment", async (c) => {
@@ -34,12 +35,17 @@ comment.post("/comment", async (c) => {
     const userId: number = payload.sub;
 
     //バリデーション
-    const output = await addCommentUsecase.run(userId, postData.postId);
+    const output = await addCommentUsecase.run(
+      userId,
+      postData.postId,
+      postData.comment
+    );
 
     const responseBody = {
       id: output.id,
       userId: output.userId,
       postId: output.postId,
+      comment: output.comment,
     };
     return c.json(responseBody, 201);
   } catch (error) {

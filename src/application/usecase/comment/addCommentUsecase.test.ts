@@ -14,15 +14,14 @@ describe("addCommentUsecsse Test", () => {
   const commentData = {
     userId: 1,
     postId: 2,
+    commemt: "test",
   };
 
   //正常系
-  const postResult = new PostEntity(1, "テスト", 3);
+  const postResult = new PostEntity(1, "test", 3);
 
   //投稿が見つからない
   const postNotFoundResult = undefined;
-  //commentをすでにしている
-  const commentDuplicationResult = new CommentEntity(1, 1, 2);
 
   beforeEach(() => {
     mockCommentRepository = {
@@ -44,18 +43,12 @@ describe("addCommentUsecsse Test", () => {
       (mockPostRepository.getPostByOnlyPostId as jest.Mock).mockReturnValue(
         postResult
       );
-      (mockCommentRepository.getComment as jest.Mock).mockReturnValue(
-        undefined
-      );
       const commentResult = await addCommentUsecase.run(
         commentData.userId,
-        commentData.postId
+        commentData.postId,
+        commentData.commemt
       );
       expect(commentResult).toEqual(commentResult);
-      expect(mockCommentRepository.getComment).toHaveBeenCalledWith(
-        commentData.userId,
-        commentData.postId
-      );
       expect(mockPostRepository.getPostByOnlyPostId).toHaveBeenCalledWith(
         commentData.postId
       );
@@ -70,7 +63,11 @@ describe("addCommentUsecsse Test", () => {
         undefined
       );
       await expect(
-        addCommentUsecase.run(commentData.userId, commentData.postId)
+        addCommentUsecase.run(
+          commentData.userId,
+          commentData.postId,
+          commentData.commemt
+        )
       ).rejects.toThrow(new ValidationError("Not found post"));
     });
     it("DBエラーでコメントが失敗する", async () => {
@@ -82,13 +79,18 @@ describe("addCommentUsecsse Test", () => {
       );
       const commentResult = await addCommentUsecase.run(
         commentData.userId,
-        commentData.postId
+        commentData.postId,
+        commentData.commemt
       );
       (mockCommentRepository.addComment as jest.Mock).mockRejectedValueOnce(
         new Error("Database error")
       );
       await expect(
-        addCommentUsecase.run(commentData.userId, commentData.postId)
+        addCommentUsecase.run(
+          commentData.userId,
+          commentData.postId,
+          commentData.commemt
+        )
       ).rejects.toThrow("Database error");
     });
   });
