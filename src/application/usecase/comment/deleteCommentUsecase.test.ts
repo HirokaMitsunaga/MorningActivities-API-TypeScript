@@ -42,7 +42,7 @@ describe("deleteCommentUsecsse Test", () => {
   });
 
   describe("正常系", () => {
-    it("いいねが削除できる", async () => {
+    it("コメントが削除できる", async () => {
       (mockPostRepository.getPostByOnlyPostId as jest.Mock).mockReturnValue(
         postFoundResult
       );
@@ -63,7 +63,7 @@ describe("deleteCommentUsecsse Test", () => {
     });
   });
   describe("異常系", () => {
-    it("いいねしたい投稿が見つからない時、バリデーションエラーを返す", async () => {
+    it("コメントしたい投稿が見つからない時、バリデーションエラーを返す", async () => {
       (mockPostRepository.getPostByOnlyPostId as jest.Mock).mockReturnValue(
         postNotFoundResult
       );
@@ -74,7 +74,7 @@ describe("deleteCommentUsecsse Test", () => {
         deleteCommentUsecase.run(commentData.userId, commentData.postId)
       ).rejects.toThrow(new ValidationError("Not found post"));
     });
-    it("いいねしていないのに削除しようとした時、ドメインエラーを返す", async () => {
+    it("コメントしていないのに削除しようとした時、ドメインエラーを返す", async () => {
       (mockPostRepository.getPostByOnlyPostId as jest.Mock).mockReturnValue(
         postFoundResult
       );
@@ -85,7 +85,7 @@ describe("deleteCommentUsecsse Test", () => {
         deleteCommentUsecase.run(commentData.userId, commentData.postId)
       ).rejects.toThrow(new DomainError("You have not commentd this post"));
     });
-    it("DBエラーでいいねが失敗する", async () => {
+    it("DBエラーでコメントが失敗する", async () => {
       (mockPostRepository.getPostByOnlyPostId as jest.Mock).mockReturnValue(
         postFoundResult
       );
