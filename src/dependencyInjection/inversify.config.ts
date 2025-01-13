@@ -9,11 +9,13 @@ import { LoginUserUsecase } from "../application/usecase/auth/loginUserUsecase.j
 import { ILogger, Logger } from "../utils/logger.js";
 
 const diContainer = new Container();
-const prismaClient = new PrismaClient();
 
 diContainer
   .bind<PrismaClient>(TYPES.PrismaClient)
-  .toConstantValue(prismaClient);
+  .toDynamicValue(() => {
+    return new PrismaClient();
+  })
+  .inSingletonScope();
 diContainer.bind<LoginUserUsecase>(TYPES.LoginUserUsecase).to(LoginUserUsecase);
 diContainer.bind<UserGatewayInterface>(TYPES.UserGateway).to(UserGateway);
 diContainer.bind<ILogger>(TYPES.Logger).to(Logger);
