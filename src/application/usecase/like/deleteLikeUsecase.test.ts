@@ -57,7 +57,7 @@ describe("deleteLikeUsecsse Test", () => {
       );
       expect(likeResult).toEqual(undefined);
       expect(mockLikeRepository.deleteLike).toHaveBeenCalledWith(
-        likeData.postId
+        likeData.likeId
       );
       expect(mockPostRepository.getPostByOnlyPostId).toHaveBeenCalledWith(
         likeData.postId

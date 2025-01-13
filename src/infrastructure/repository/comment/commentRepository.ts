@@ -54,9 +54,9 @@ export class CommentRepository implements CommentRepositoryInterface {
     }
   }
 
-  async deleteComment(postid: number): Promise<void> {
+  async deleteComment(commentId: number): Promise<void> {
     try {
-      await this._commentGateway.deleteComment(postid);
+      await this._commentGateway.deleteComment(commentId);
     } catch (error) {
       if (error instanceof Error) {
         throw error;

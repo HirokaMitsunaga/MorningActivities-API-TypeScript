@@ -2,19 +2,18 @@ import { Hono } from "hono";
 import { LikePostRequestBody } from "./likeRouter.js";
 import { ValidationError } from "../../validator/validationError.js";
 import { DomainError } from "../../validator/domainError.js";
-import { LikeEntity } from "../../domain/like/likeEntity.js";
-import { testClient } from "hono/testing";
 
 describe("deleteLikeRouter", () => {
   let mockDeleteLikeUsecase: {
-    run: jest.Mock<Promise<LikeEntity>, [number, number]>;
+    run: jest.Mock<Promise<void>, [number, number, number]>;
   };
   //入力値
-  const inputLikeData: LikePostRequestBody = {
+  const inputLikeData = {
+    userId: 1,
     postId: 1,
+    likeId: 1,
   };
   //出力値
-  const outputLikeData = new LikeEntity(1, 1, 1);
   const app = new Hono()
     .use("*", async (c, next) => {
       c.set("jwtPayload", { sub: 1 });
@@ -22,19 +21,15 @@ describe("deleteLikeRouter", () => {
     })
     .delete("/api/like/:id", async (c) => {
       try {
+        const postData = await c.req.json<LikePostRequestBody>();
         const payload = c.get("jwtPayload");
         const userId: number = payload.sub;
         const likeId = Number(c.req.param("id"));
 
         //バリデーション
-        const output = await mockDeleteLikeUsecase.run(userId, likeId);
+        await mockDeleteLikeUsecase.run(userId, postData.postId, likeId);
 
-        const responseBody = {
-          id: output.id,
-          userId: output.userId,
-          postId: output.postId,
-        };
-        return c.json(responseBody, 201);
+        return c.json({ success: `delete post id = ${likeId}` }, 201);
       } catch (error) {
         if (error instanceof ValidationError) {
           return c.json({ error: error.message }, 400);
@@ -50,27 +45,28 @@ describe("deleteLikeRouter", () => {
       run: jest.fn(),
     };
   });
-  describe("addLike", () => {
+  describe("deleteLike", () => {
     it("ステータスコード201を返すこと", async () => {
-      mockDeleteLikeUsecase.run.mockResolvedValue(outputLikeData);
-      const client = testClient(app);
-      const res = await client.api.like[":id"].$delete({
-        param: { id: "1" },
-      });
+      mockDeleteLikeUsecase.run.mockResolvedValue(undefined);
 
+      const res = await app.request("/api/like/1", {
+        method: "DELETE",
+        body: JSON.stringify({ postId: inputLikeData.postId }), // 追加
+      });
+      console.log("Response:", res.status, res); // レスポンスの詳細を確認
       expect(res.status).toBe(201);
       expect(mockDeleteLikeUsecase.run).toHaveBeenCalledWith(
-        outputLikeData.userId,
-        outputLikeData.postId
+        inputLikeData.userId,
+        inputLikeData.postId,
+        inputLikeData.likeId
       );
     });
     it("ステータスコードが500を返すこと", async () => {
       mockDeleteLikeUsecase.run.mockRejectedValueOnce(
         new Error("Database connection error")
       );
-      const client = testClient(app);
-      const res = await client.api.like[":id"].$delete({
-        param: { id: "1" },
+      const res = await app.request("/api/like/1", {
+        method: "DELETE",
       });
 
       expect(res.status).toBe(500);

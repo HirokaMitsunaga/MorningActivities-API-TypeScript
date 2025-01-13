@@ -11,6 +11,7 @@ describe("commentRepository Test", () => {
     userId: 1,
     postId: 2,
     comment: "test",
+    commentId: 1,
   };
   //出力値
   const commentRepositoryOutputData = new CommentEntity(1, "test", 1, 2);
@@ -97,6 +98,36 @@ describe("commentRepository Test", () => {
       expect(mockCommentGateway.getComment).toHaveBeenCalledWith(
         commentRepositoryInputData.userId,
         commentRepositoryInputData.postId
+      );
+    });
+  });
+  describe("commentRepository deleteComment", () => {
+    beforeEach(() => {
+      mockCommentGateway = {
+        deleteComment: jest.fn(),
+      };
+      commentRepository = new CommentRepository(
+        mockCommentGateway as commentGatewayInterFace
+      );
+    });
+    it("いいねの削除ができる", async () => {
+      (mockCommentGateway.deleteComment as jest.Mock).mockReturnValue(
+        commentGatewayResult
+      );
+      const comment = await commentRepository.deleteComment(
+        commentRepositoryInputData.commentId
+      );
+      expect(comment).toEqual(undefined);
+      expect(mockCommentGateway.deleteComment).toHaveBeenCalledWith(
+        commentRepositoryInputData.commentId
+      );
+    });
+    it("DB接続エラーで失敗する", async () => {
+      (mockCommentGateway.deleteComment as jest.Mock).mockRejectedValueOnce(
+        new Error("Database error")
+      );
+      await expect(mockCommentGateway.deleteComment).rejects.toThrow(
+        "Database error"
       );
     });
   });

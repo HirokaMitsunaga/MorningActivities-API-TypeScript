@@ -15,6 +15,7 @@ describe("deleteCommentUsecsse Test", () => {
   const commentData = {
     userId: 1,
     postId: 2,
+    commentId: 1,
   };
 
   //正常系
@@ -51,11 +52,12 @@ describe("deleteCommentUsecsse Test", () => {
       );
       const commentResult = await deleteCommentUsecase.run(
         commentData.userId,
-        commentData.postId
+        commentData.postId,
+        commentData.commentId
       );
       expect(commentResult).toEqual(undefined);
       expect(mockCommentRepository.deleteComment).toHaveBeenCalledWith(
-        commentData.postId
+        commentData.commentId
       );
       expect(mockPostRepository.getPostByOnlyPostId).toHaveBeenCalledWith(
         commentData.postId
@@ -71,7 +73,11 @@ describe("deleteCommentUsecsse Test", () => {
         commentFoundResult
       );
       await expect(
-        deleteCommentUsecase.run(commentData.userId, commentData.postId)
+        deleteCommentUsecase.run(
+          commentData.userId,
+          commentData.postId,
+          commentData.commentId
+        )
       ).rejects.toThrow(new ValidationError("Not found post"));
     });
     it("コメントしていないのに削除しようとした時、ドメインエラーを返す", async () => {
@@ -82,7 +88,11 @@ describe("deleteCommentUsecsse Test", () => {
         commentNotFoundResult
       );
       await expect(
-        deleteCommentUsecase.run(commentData.userId, commentData.postId)
+        deleteCommentUsecase.run(
+          commentData.userId,
+          commentData.postId,
+          commentData.commentId
+        )
       ).rejects.toThrow(new DomainError("You have not commentd this post"));
     });
     it("DBエラーでコメントが失敗する", async () => {
@@ -96,7 +106,11 @@ describe("deleteCommentUsecsse Test", () => {
         new Error("Database error")
       );
       await expect(
-        deleteCommentUsecase.run(commentData.userId, commentData.postId)
+        deleteCommentUsecase.run(
+          commentData.userId,
+          commentData.postId,
+          commentData.commentId
+        )
       ).rejects.toThrow("Database error");
     });
   });

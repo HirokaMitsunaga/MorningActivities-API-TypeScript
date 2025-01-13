@@ -61,11 +61,12 @@ comment.post("/comment", async (c) => {
 
 comment.delete("/comment/:id", async (c) => {
   try {
+    const postData = await c.req.json<CommentPostRequestBody>();
     const payload = c.get("jwtPayload");
     const userId: number = payload.sub;
     const commentId = Number(c.req.param("id"));
 
-    await deleteCommentUsecase.run(userId, commentId);
+    await deleteCommentUsecase.run(userId, postData.postId, commentId);
 
     return c.json({ success: `delete post id = ${commentId}` }, 201);
   } catch (error) {

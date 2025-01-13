@@ -7,15 +7,17 @@ import { testClient } from "hono/testing";
 
 describe("deleteCommentRouter", () => {
   let mockDeleteCommentUsecase: {
-    run: jest.Mock<Promise<CommentEntity>, [number, number]>;
+    run: jest.Mock<Promise<void>, [number, number, number]>;
   };
   //入力値
-  const inputCommentData: CommentPostRequestBody = {
+  //入力値
+  const inputCommentData = {
+    userId: 1,
     postId: 1,
-    comment: "test",
+    commentId: 1,
   };
   //出力値
-  const outputCommentData = new CommentEntity(1, "test", 1, 1);
+  const outputCommentData = undefined;
   const app = new Hono()
     .use("*", async (c, next) => {
       c.set("jwtPayload", { sub: 1 });
@@ -23,20 +25,14 @@ describe("deleteCommentRouter", () => {
     })
     .delete("/api/comment/:id", async (c) => {
       try {
+        const postData = await c.req.json<CommentPostRequestBody>();
         const payload = c.get("jwtPayload");
         const userId: number = payload.sub;
         const commentId = Number(c.req.param("id"));
 
         //バリデーション
-        const output = await mockDeleteCommentUsecase.run(userId, commentId);
-
-        const responseBody = {
-          id: output.id,
-          comment: output.comment,
-          userId: output.userId,
-          postId: output.postId,
-        };
-        return c.json(responseBody, 201);
+        await mockDeleteCommentUsecase.run(userId, postData.postId, commentId);
+        return c.json({ success: `delete post id = ${commentId}` }, 201);
       } catch (error) {
         if (error instanceof ValidationError) {
           return c.json({ error: error.message }, 400);
@@ -52,27 +48,30 @@ describe("deleteCommentRouter", () => {
       run: jest.fn(),
     };
   });
-  describe("addComment", () => {
+  describe("deleteComment", () => {
     it("ステータスコード201を返すこと", async () => {
       mockDeleteCommentUsecase.run.mockResolvedValue(outputCommentData);
-      const client = testClient(app);
-      const res = await client.api.comment[":id"].$delete({
-        param: { id: "1" },
+      mockDeleteCommentUsecase.run.mockResolvedValue(undefined);
+
+      const res = await app.request("/api/comment/1", {
+        method: "DELETE",
+        body: JSON.stringify({ postId: inputCommentData.postId }), // 追加
       });
 
       expect(res.status).toBe(201);
       expect(mockDeleteCommentUsecase.run).toHaveBeenCalledWith(
-        outputCommentData.userId,
-        outputCommentData.postId
+        inputCommentData.userId,
+        inputCommentData.postId,
+        inputCommentData.commentId
       );
     });
     it("ステータスコードが500を返すこと", async () => {
       mockDeleteCommentUsecase.run.mockRejectedValueOnce(
         new Error("Database connection error")
       );
-      const client = testClient(app);
-      const res = await client.api.comment[":id"].$delete({
-        param: { id: "1" },
+      const res = await app.request("/api/comment/1", {
+        method: "DELETE",
+        body: JSON.stringify({ postId: inputCommentData.postId }), // 追加
       });
 
       expect(res.status).toBe(500);
