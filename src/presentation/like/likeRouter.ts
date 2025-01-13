@@ -55,11 +55,12 @@ like.post("/like", async (c) => {
 
 like.delete("/like/:id", async (c) => {
   try {
+    const postData = await c.req.json<LikePostRequestBody>();
     const payload = c.get("jwtPayload");
     const userId: number = payload.sub;
     const likeId = Number(c.req.param("id"));
 
-    await deleteLikeUsecase.run(userId, likeId);
+    await deleteLikeUsecase.run(userId, postData.postId, likeId);
 
     return c.json({ success: `delete post id = ${likeId}` }, 201);
   } catch (error) {

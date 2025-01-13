@@ -15,6 +15,7 @@ describe("deleteLikeUsecsse Test", () => {
   const likeData = {
     userId: 1,
     postId: 2,
+    likeId: 1,
   };
 
   //正常系
@@ -51,7 +52,8 @@ describe("deleteLikeUsecsse Test", () => {
       );
       const likeResult = await deleteLikeUsecase.run(
         likeData.userId,
-        likeData.postId
+        likeData.postId,
+        likeData.likeId
       );
       expect(likeResult).toEqual(undefined);
       expect(mockLikeRepository.deleteLike).toHaveBeenCalledWith(
@@ -71,7 +73,7 @@ describe("deleteLikeUsecsse Test", () => {
         likeFoundResult
       );
       await expect(
-        deleteLikeUsecase.run(likeData.userId, likeData.postId)
+        deleteLikeUsecase.run(likeData.userId, likeData.postId, likeData.likeId)
       ).rejects.toThrow(new ValidationError("Not found post"));
     });
     it("いいねしていないのに削除しようとした時、ドメインエラーを返す", async () => {
@@ -82,7 +84,7 @@ describe("deleteLikeUsecsse Test", () => {
         likeNotFoundResult
       );
       await expect(
-        deleteLikeUsecase.run(likeData.userId, likeData.postId)
+        deleteLikeUsecase.run(likeData.userId, likeData.postId, likeData.likeId)
       ).rejects.toThrow(new DomainError("You have not liked this post"));
     });
     it("DBエラーでいいねが失敗する", async () => {
@@ -96,7 +98,7 @@ describe("deleteLikeUsecsse Test", () => {
         new Error("Database error")
       );
       await expect(
-        deleteLikeUsecase.run(likeData.userId, likeData.postId)
+        deleteLikeUsecase.run(likeData.userId, likeData.postId, likeData.likeId)
       ).rejects.toThrow("Database error");
     });
   });
