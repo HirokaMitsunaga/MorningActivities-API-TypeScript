@@ -1,3 +1,5 @@
+import { injectable } from "inversify";
+
 export interface ILogger {
   info(message: string, context?: Record<string, unknown>): void;
   error(
@@ -9,18 +11,8 @@ export interface ILogger {
   debug(message: string, context?: Record<string, unknown>): void;
 }
 
+@injectable()
 export class Logger implements ILogger {
-  private static instance: Logger;
-
-  private constructor() {}
-
-  static getInstance(): Logger {
-    if (!Logger.instance) {
-      Logger.instance = new Logger();
-    }
-    return Logger.instance;
-  }
-
   info(message: string, context?: Record<string, unknown>): void {
     console.log(
       JSON.stringify(
