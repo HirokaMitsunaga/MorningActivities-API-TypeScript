@@ -23,6 +23,7 @@ model User {
   posts Post[]
   likes Like[]
   comments Comment[]
+  commentLikes CommentLike[]
 }
 
 model Task {
@@ -64,6 +65,17 @@ model Comment {
   userId  Int
   post   Post @relation(fields: [postId], references: [id])
   postId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  commentLikes CommentLike[]
+}
+
+model CommentLike {
+  id      Int      @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId  Int
+  comment   Comment @relation(fields: [commentId], references: [id])
+  commentId  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
