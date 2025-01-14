@@ -35,9 +35,9 @@ export class LikeRepository implements LikeRepositoryInterface {
     }
   }
 
-  async deleteLike(postid: number): Promise<void> {
+  async deleteLike(likeId: number): Promise<void> {
     try {
-      await this._likeGateway.deleteLike(postid);
+      await this._likeGateway.deleteLike(likeId);
     } catch (error) {
       if (error instanceof Error) {
         throw error;

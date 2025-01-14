@@ -10,5 +10,5 @@ export interface CommentRepositoryInterface {
     userId: number,
     commentId: number
   ): Promise<CommentEntity | undefined>;
-  deleteComment(postid: number): Promise<void>;
+  deleteComment(commentId: number): Promise<void>;
 }

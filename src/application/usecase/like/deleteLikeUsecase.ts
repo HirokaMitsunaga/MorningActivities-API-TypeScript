@@ -8,7 +8,7 @@ export class DeleteLikeUsecase {
     private _likeRepository: LikeRepositoryInterface,
     private _postRepository: PostRepositoryInterface
   ) {}
-  async run(userId: number, postId: number): Promise<void> {
+  async run(userId: number, postId: number, likeId: number): Promise<void> {
     try {
       //ポストがない時はバリデーションエラーを返す
       const post = await this._postRepository.getPostByOnlyPostId(postId);
@@ -16,12 +16,16 @@ export class DeleteLikeUsecase {
         throw new ValidationError("Not found post");
       }
       //いいねしていない時はドメインエラーにする
-      const isLike = await this._likeRepository.getLike(userId, postId);
-      if (!isLike) {
+      const like = await this._likeRepository.getLike(userId, postId);
+      if (!like) {
         throw new DomainError("You have not liked this post");
       }
+      // likeIdが一致するか確認
+      if (like.id !== likeId) {
+        throw new DomainError("Invalid like ID");
+      }
 
-      await this._likeRepository.deleteLike(postId);
+      await this._likeRepository.deleteLike(likeId);
     } catch (error) {
       if (error instanceof Error) {
         throw error;

@@ -1,17 +1,17 @@
 import { Hono } from "hono";
-import { LikePostRequestBody } from "./likeRouter.js";
+import { CommentLikePostRequestBody } from "./commentLikeRouter.js";
 import { ValidationError } from "../../validator/validationError.js";
 import { DomainError } from "../../validator/domainError.js";
 
-describe("deleteLikeRouter", () => {
-  let mockDeleteLikeUsecase: {
+describe("deleteCommentLikeRouter", () => {
+  let mockDeleteCommentLikeUsecase: {
     run: jest.Mock<Promise<void>, [number, number, number]>;
   };
   //入力値
-  const inputLikeData = {
+  const inputCommentLikeData = {
     userId: 1,
-    postId: 1,
-    likeId: 1,
+    commentId: 1,
+    commentLikeId: 1,
   };
   //出力値
   const app = new Hono()
@@ -19,17 +19,21 @@ describe("deleteLikeRouter", () => {
       c.set("jwtPayload", { sub: 1 });
       await next();
     })
-    .delete("/api/like/:id", async (c) => {
+    .delete("/api/comment-like/:id", async (c) => {
       try {
-        const postData = await c.req.json<LikePostRequestBody>();
+        const postData = await c.req.json<CommentLikePostRequestBody>();
         const payload = c.get("jwtPayload");
         const userId: number = payload.sub;
-        const likeId = Number(c.req.param("id"));
+        const commentLikeId = Number(c.req.param("id"));
 
         //バリデーション
-        await mockDeleteLikeUsecase.run(userId, postData.postId, likeId);
+        await mockDeleteCommentLikeUsecase.run(
+          userId,
+          postData.commentId,
+          commentLikeId
+        );
 
-        return c.json({ success: `delete post id = ${likeId}` }, 201);
+        return c.json({ success: `delete post id = ${commentLikeId}` }, 201);
       } catch (error) {
         if (error instanceof ValidationError) {
           return c.json({ error: error.message }, 400);
@@ -41,31 +45,30 @@ describe("deleteLikeRouter", () => {
       }
     });
   beforeEach(() => {
-    mockDeleteLikeUsecase = {
+    mockDeleteCommentLikeUsecase = {
       run: jest.fn(),
     };
   });
-  describe("deleteLike", () => {
+  describe("deleteCommentLike", () => {
     it("ステータスコード201を返すこと", async () => {
-      mockDeleteLikeUsecase.run.mockResolvedValue(undefined);
+      mockDeleteCommentLikeUsecase.run.mockResolvedValue(undefined);
 
-      const res = await app.request("/api/like/1", {
+      const res = await app.request("/api/comment-like/1", {
         method: "DELETE",
-        body: JSON.stringify({ postId: inputLikeData.postId }), // 追加
+        body: JSON.stringify({ commentId: inputCommentLikeData.commentId }), // 追加
       });
-      console.log("Response:", res.status, res); // レスポンスの詳細を確認
       expect(res.status).toBe(201);
-      expect(mockDeleteLikeUsecase.run).toHaveBeenCalledWith(
-        inputLikeData.userId,
-        inputLikeData.postId,
-        inputLikeData.likeId
+      expect(mockDeleteCommentLikeUsecase.run).toHaveBeenCalledWith(
+        inputCommentLikeData.userId,
+        inputCommentLikeData.commentId,
+        inputCommentLikeData.commentLikeId
       );
     });
     it("ステータスコードが500を返すこと", async () => {
-      mockDeleteLikeUsecase.run.mockRejectedValueOnce(
+      mockDeleteCommentLikeUsecase.run.mockRejectedValueOnce(
         new Error("Database connection error")
       );
-      const res = await app.request("/api/like/1", {
+      const res = await app.request("/api/comment-like/1", {
         method: "DELETE",
       });
 

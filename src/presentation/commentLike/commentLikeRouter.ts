@@ -1,51 +1,45 @@
 import { Hono } from "hono";
 import { authMiddleware } from "../../middleware/auth.js";
-import { AddCommentUsecase } from "../../application/usecase/comment/addCommentUsecase.js";
-import { CommentRepository } from "../../infrastructure/repository/comment/commentRepository.js";
-import { CommentGateway } from "../../infrastructure/repository/comment/commentGateway.js";
+import { AddCommentLikeUsecase } from "../../application/usecase/commentLike/addCommentLikeUsecase.js";
+import { CommentLikeRepository } from "../../infrastructure/repository/commentLike/commentLikeRepository.js";
+import { CommentLikeGateway } from "../../infrastructure/repository/commentLike/commentLikeGateway.js";
 import { PrismaClient } from "@prisma/client";
-import { DeleteCommentUsecase } from "../../application/usecase/comment/deleteCommentUsecase.js";
+import { DeleteCommentLikeUsecase } from "../../application/usecase/commentLike/deleteCommentLikeUsecase.js";
 import { ValidationError } from "../../validator/validationError.js";
 import { PostRepository } from "../../infrastructure/repository/post/postRepository.js";
 import { PostGateway } from "../../infrastructure/repository/post/postGateway.js";
 import { DomainError } from "../../validator/domainError.js";
 
-const comment = new Hono();
-comment.use("/comment/*", authMiddleware);
+const commentLike = new Hono();
+commentLike.use("/comment-like/*", authMiddleware);
 
-const addCommentUsecase = new AddCommentUsecase(
-  new CommentRepository(new CommentGateway(new PrismaClient())),
+const addCommentLikeUsecase = new AddCommentLikeUsecase(
+  new CommentLikeRepository(new CommentLikeGateway(new PrismaClient())),
   new PostRepository(new PostGateway(new PrismaClient()))
 );
 
-const deleteCommentUsecase = new DeleteCommentUsecase(
-  new CommentRepository(new CommentGateway(new PrismaClient())),
+const deleteCommentLikeUsecase = new DeleteCommentLikeUsecase(
+  new CommentLikeRepository(new CommentLikeGateway(new PrismaClient())),
   new PostRepository(new PostGateway(new PrismaClient()))
 );
 
-export type CommentPostRequestBody = {
-  postId: number;
-  comment: string;
+export type CommentLikePostRequestBody = {
+  commentId: number;
 };
 
-comment.post("/comment", async (c) => {
+commentLike.post("/comment-like", async (c) => {
   try {
-    const postData = await c.req.json<CommentPostRequestBody>();
+    const postData = await c.req.json<CommentLikePostRequestBody>();
     const payload = c.get("jwtPayload");
     const userId: number = payload.sub;
 
     //バリデーション
-    const output = await addCommentUsecase.run(
-      userId,
-      postData.postId,
-      postData.comment
-    );
+    const output = await addCommentLikeUsecase.run(userId, postData.commentId);
 
     const responseBody = {
       id: output.id,
       userId: output.userId,
-      postId: output.postId,
-      comment: output.comment,
+      commentId: output.commentId,
     };
     return c.json(responseBody, 201);
   } catch (error) {
@@ -59,16 +53,20 @@ comment.post("/comment", async (c) => {
   }
 });
 
-comment.delete("/comment/:id", async (c) => {
+commentLike.delete("/comment-like/:id", async (c) => {
   try {
-    const postData = await c.req.json<CommentPostRequestBody>();
+    const postData = await c.req.json<CommentLikePostRequestBody>();
     const payload = c.get("jwtPayload");
     const userId: number = payload.sub;
-    const commentId = Number(c.req.param("id"));
+    const commentLikeId = Number(c.req.param("id"));
 
-    await deleteCommentUsecase.run(userId, postData.postId, commentId);
+    await deleteCommentLikeUsecase.run(
+      userId,
+      postData.commentId,
+      commentLikeId
+    );
 
-    return c.json({ success: `delete post id = ${commentId}` }, 201);
+    return c.json({ success: `delete post id = ${commentLikeId}` }, 201);
   } catch (error) {
     if (error instanceof ValidationError) {
       return c.json({ error: error.message }, 400);
@@ -83,4 +81,4 @@ comment.delete("/comment/:id", async (c) => {
   }
 });
 
-export default comment;
+export default commentLike;
