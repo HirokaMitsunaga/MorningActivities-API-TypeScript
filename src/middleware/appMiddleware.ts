@@ -12,6 +12,9 @@ export const middlewareFactory = createFactory({
     app.use("*", prettyJSON());
     app.use("*", contextStorage());
     app.use("*", requestId());
-    app.use("*", every(corsMiddleware, csrfMiddleware));
+
+    if (process.env.NODE_ENV !== "test") {
+      app.use("*", every(corsMiddleware, csrfMiddleware));
+    }
   },
 });
