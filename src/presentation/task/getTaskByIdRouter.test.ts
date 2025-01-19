@@ -28,9 +28,6 @@ describe("getTaskById test", () => {
         const taskId = Number(c.req.param("id"));
 
         const output = await mockGetTaskByIdUsecase.run(userId, taskId);
-        if (!output) {
-          return c.json({ error: "Not found task" }, 400);
-        }
 
         return c.json(output, 201);
       } catch (error) {
@@ -65,7 +62,7 @@ describe("getTaskById test", () => {
       expect(await res.json()).toEqual(expectedTask);
     });
 
-    it("タスクが存在しない時は400を返すこと", async () => {
+    it("タスクが存在しない時も201を返すこと", async () => {
       mockGetTaskByIdUsecase.run.mockResolvedValue(undefined);
 
       const client = testClient(app);
@@ -75,9 +72,7 @@ describe("getTaskById test", () => {
         },
       });
 
-      expect(res.status).toBe(400);
-      const body = (await res.json()) as { error: string };
-      expect(body.error).toContain("Not found task");
+      expect(res.status).toBe(201);
     });
 
     it("ステータスコードが500を返すこと", async () => {

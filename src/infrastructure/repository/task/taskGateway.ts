@@ -90,8 +90,8 @@ export class TaskGateway implements TaskGatewayInterface {
     taskId: number,
     title: string,
     userId: number,
-    scheduleMinnutes: number | null,
-    actualMinutes: number | null
+    scheduleMinnutes: number | null | undefined,
+    actualMinutes: number | null | undefined
   ): Promise<Task> {
     try {
       const task = await this.prisma.task.update({
@@ -101,8 +101,8 @@ export class TaskGateway implements TaskGatewayInterface {
         },
         data: {
           title: title,
-          scheduleMinnutes: scheduleMinnutes,
-          actualMinutes: actualMinutes,
+          scheduleMinnutes: scheduleMinnutes ?? null,
+          actualMinutes: actualMinutes ?? null,
         },
       });
       return task;

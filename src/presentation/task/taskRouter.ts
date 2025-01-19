@@ -87,9 +87,6 @@ task.get("/task", async (c) => {
     const userId: number = payload.sub;
 
     const output = await getAllTasksUsecase.run(userId);
-    if (!output) {
-      return c.json({ error: "Not found tasks" }, 400);
-    }
 
     return c.json(output, 201);
   } catch (error) {
@@ -107,9 +104,6 @@ task.get("/task/:id", async (c) => {
     const taskId = Number(c.req.param("id"));
 
     const output = await getTaskByIdUsecase.run(userId, taskId);
-    if (!output) {
-      return c.json({ error: "Not found task" }, 400);
-    }
 
     return c.json(output, 201);
   } catch (error) {
@@ -145,6 +139,9 @@ task.put("/task/:id", async (c) => {
         taskData.actualMinutes ?? undefined
       )
     );
+    if (!output) {
+      return c.body(null, 204);
+    }
     const responseBody = {
       title: output.title,
       userId: output.userId,

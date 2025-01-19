@@ -36,9 +36,6 @@ describe("getAllTasks test", () => {
         const userId: number = payload.sub;
 
         const output = await mockGetAllTasksUsecase.run(userId);
-        if (!output) {
-          return c.json({ error: "Not found tasks" }, 400);
-        }
 
         return c.json(output, 201);
       } catch (error) {
@@ -69,7 +66,7 @@ describe("getAllTasks test", () => {
       expect(await res.json()).toEqual(expectedTasks);
     });
 
-    it("タスクが存在しない時は400を返すこと", async () => {
+    it("タスクが存在しない時はも201を返すこと", async () => {
       mockGetAllTasksUsecase.run.mockResolvedValue(undefined);
 
       const client = testClient(app);
@@ -77,9 +74,7 @@ describe("getAllTasks test", () => {
         json: taskData.userId,
       });
 
-      expect(res.status).toBe(400);
-      const body = (await res.json()) as { error: string };
-      expect(body.error).toContain("Not found tasks");
+      expect(res.status).toBe(201);
     });
 
     it("ステータスコードが500を返すこと", async () => {
