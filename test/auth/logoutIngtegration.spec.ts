@@ -9,18 +9,6 @@ const correctUserData = {
   password: "password123",
 };
 
-const noUserData = {
-  email: "aaa@example.com",
-  name: "Test User",
-  password: "password123",
-};
-
-const incorrectPasswordUserData = {
-  email: "aaa@example.com",
-  name: "Test User",
-  password: "incorrect",
-};
-
 describe("Login integration test", () => {
   let app: Hono;
   beforeEach(() => {
@@ -54,7 +42,6 @@ describe("Login integration test", () => {
     const response = await app.request("/api/logout", {
       method: "POST",
     });
-    const responseBody = await response.json();
     expect(response.status).toBe(500);
   });
 });
