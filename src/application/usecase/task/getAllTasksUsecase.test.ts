@@ -32,7 +32,7 @@ describe("GetAllTasksUsecase Test", () => {
       expectedTask.id,
       expectedTask.title,
       expectedTask.userId,
-      expectedTask.scheduleMinnutes,
+      expectedTask.scheduleMinutes,
       expectedTask.actualMinutes
     ),
   ];

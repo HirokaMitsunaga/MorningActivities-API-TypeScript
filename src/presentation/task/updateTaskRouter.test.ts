@@ -12,7 +12,7 @@ describe("updateTask test", () => {
   //入力値
   const task: TaskPostRequestBody = {
     title: "test",
-    scheduleMinnutes: 20,
+    scheduleMinutes: 20,
     actualMinutes: 23,
   };
   //mockUpdateTaskUsecaseの引数
@@ -47,14 +47,14 @@ describe("updateTask test", () => {
             taskId,
             taskData.title,
             userId,
-            taskData.scheduleMinnutes ?? undefined,
+            taskData.scheduleMinutes ?? undefined,
             taskData.actualMinutes ?? undefined
           )
         );
         const responseBody = {
           title: output.title,
           userId: output.userId,
-          scheduleMinnutes: output.scheduleMinnutes,
+          scheduleMinutes: output.scheduleMinutes,
           actualMinutes: output.actualMinutes,
         };
 
@@ -80,7 +80,7 @@ describe("updateTask test", () => {
         method: "PUT",
         body: JSON.stringify({
           title: mockTask.title,
-          scheduleMinnutes: mockTask.scheduleMinnutes,
+          scheduleMinutes: mockTask.scheduleMinutes,
           actualMinutes: mockTask.actualMinutes,
         }),
       });
@@ -92,14 +92,14 @@ describe("updateTask test", () => {
     it("バリデーションエラー時は400を返すこと", async () => {
       const invalidTask: TaskPostRequestBody = {
         title: "testtesttesttesttesttesttesttesttesttesttesttesttest",
-        scheduleMinnutes: 20,
+        scheduleMinutes: 20,
         actualMinutes: 23,
       };
       const res = await app.request("/api/task/1", {
         method: "PUT",
         body: JSON.stringify({
           title: invalidTask.title,
-          scheduleMinnutes: invalidTask.scheduleMinnutes,
+          scheduleMinutes: invalidTask.scheduleMinutes,
           actualMinutes: invalidTask.actualMinutes,
         }),
       });
@@ -118,7 +118,7 @@ describe("updateTask test", () => {
         method: "PUT",
         body: JSON.stringify({
           title: mockTask.title,
-          scheduleMinnutes: mockTask.scheduleMinnutes,
+          scheduleMinutes: mockTask.scheduleMinutes,
           actualMinutes: mockTask.actualMinutes,
         }),
       });

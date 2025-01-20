@@ -38,7 +38,7 @@ const deleteTaskUsecase = new DeleteTaskUsecase(
 
 export type TaskPostRequestBody = {
   title: string;
-  scheduleMinnutes: number | undefined;
+  scheduleMinutes: number | undefined;
   actualMinutes: number | undefined;
 };
 
@@ -62,14 +62,14 @@ task.post("/task", async (c) => {
         undefined,
         taskData.title,
         userId,
-        taskData.scheduleMinnutes ?? undefined,
-        taskData.actualMinutes ?? undefined
+        taskData.scheduleMinutes,
+        taskData.actualMinutes
       )
     );
     const responseBody = {
       title: output.title,
       userId: output.userId,
-      scheduleMinnutes: output.scheduleMinnutes,
+      scheduleMinutes: output.scheduleMinutes,
       actualMinutes: output.actualMinutes,
     };
 
@@ -89,7 +89,20 @@ task.get("/task", async (c) => {
 
     const output = await getAllTasksUsecase.run(userId);
 
-    return c.json(output, 201);
+    if (!output) {
+      return c.json(output, 201);
+    }
+
+    const responseBody = output.map((task) => ({
+      title: task.title,
+      userId: task.userId,
+      scheduleMinutes: task.scheduleMinutes,
+      actualMinutes: task.actualMinutes,
+      created_at: task.createdAt,
+      updated_at: task.updatedAt,
+    }));
+
+    return c.json(responseBody, 201);
   } catch (error) {
     if (error instanceof ValidationError) {
       return c.json({ error: error.message }, 400);
@@ -106,7 +119,20 @@ task.get("/task/:id", async (c) => {
 
     const output = await getTaskByIdUsecase.run(userId, taskId);
 
-    return c.json(output, 201);
+    if (!output) {
+      return c.json(output, 201);
+    }
+
+    const responseBody = {
+      title: output.title,
+      userId: output.userId,
+      scheduleMinutes: output.scheduleMinutes,
+      actualMinutes: output.actualMinutes,
+      created_at: output.createdAt,
+      updated_at: output.updatedAt,
+    };
+
+    return c.json(responseBody, 201);
   } catch (error) {
     if (error instanceof ValidationError) {
       return c.json({ error: error.message }, 400);
@@ -136,8 +162,8 @@ task.put("/task/:id", async (c) => {
         taskId,
         taskData.title,
         userId,
-        taskData.scheduleMinnutes ?? undefined,
-        taskData.actualMinutes ?? undefined
+        taskData.scheduleMinutes,
+        taskData.actualMinutes
       )
     );
     if (!output) {
@@ -146,7 +172,7 @@ task.put("/task/:id", async (c) => {
     const responseBody = {
       title: output.title,
       userId: output.userId,
-      scheduleMinnutes: output.scheduleMinnutes,
+      scheduleMinutes: output.scheduleMinutes,
       actualMinutes: output.actualMinutes,
     };
 

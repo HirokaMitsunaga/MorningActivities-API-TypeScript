@@ -17,19 +17,19 @@ const loginData = {
 const createTaskData = {
   title: "test",
   userId: 4,
-  scheduleMinnutes: 20,
+  scheduleMinutes: 20,
   actualMinutes: 23,
 };
 
 const updataTaskData = {
   title: "test",
-  scheduleMinnutes: 20,
+  scheduleMinutes: 20,
   actualMinutes: 23,
 };
 
 const invalidTaskData = {
   title: "testtesttesttesttesttesttesttesttesttesttesttesttest",
-  scheduleMinnutes: 20,
+  scheduleMinutes: 20,
   actualMinutes: 23,
 };
 
@@ -52,7 +52,7 @@ describe("Login integration test", () => {
       data: {
         title: createTaskData.title,
         userId: createTaskData.userId,
-        scheduleMinnutes: createTaskData.scheduleMinnutes,
+        scheduleMinutes: createTaskData.scheduleMinutes,
         actualMinutes: createTaskData.actualMinutes,
       },
     });

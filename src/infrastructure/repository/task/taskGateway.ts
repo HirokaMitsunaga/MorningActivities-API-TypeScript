@@ -4,7 +4,7 @@ export interface TaskGatewayInterface {
   createTask(
     title: string,
     userId: number,
-    scheduleMinnutes: number | null,
+    scheduleMinutes: number | null,
     actualMinutes: number | null
   ): Promise<Task>;
   getAllTasks(userId: number): Promise<Task[] | undefined>;
@@ -13,7 +13,7 @@ export interface TaskGatewayInterface {
     taskId: number,
     title: string,
     userId: number,
-    scheduleMinnutes: number | null,
+    scheduleMinutes: number | null,
     actualMinutes: number | null
   ): Promise<Task>;
   deleteTask(taskId: number, userId: number): Promise<void>;
@@ -29,7 +29,7 @@ export class TaskGateway implements TaskGatewayInterface {
   async createTask(
     title: string,
     userId: number,
-    scheduleMinnutes: number | null,
+    scheduleMinutes: number | null,
     actualMinutes: number | null
   ): Promise<Task> {
     try {
@@ -37,7 +37,7 @@ export class TaskGateway implements TaskGatewayInterface {
         data: {
           title: title,
           userId: userId,
-          scheduleMinnutes: scheduleMinnutes,
+          scheduleMinutes: scheduleMinutes,
           actualMinutes: actualMinutes,
         },
       });
@@ -90,8 +90,8 @@ export class TaskGateway implements TaskGatewayInterface {
     taskId: number,
     title: string,
     userId: number,
-    scheduleMinnutes: number | null | undefined,
-    actualMinutes: number | null | undefined
+    scheduleMinutes: number | null,
+    actualMinutes: number | null
   ): Promise<Task> {
     try {
       const task = await this.prisma.task.update({
@@ -101,7 +101,7 @@ export class TaskGateway implements TaskGatewayInterface {
         },
         data: {
           title: title,
-          scheduleMinnutes: scheduleMinnutes ?? null,
+          scheduleMinutes: scheduleMinutes ?? null,
           actualMinutes: actualMinutes ?? null,
         },
       });

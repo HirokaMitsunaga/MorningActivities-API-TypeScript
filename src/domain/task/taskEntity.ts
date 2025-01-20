@@ -3,8 +3,10 @@ export class TaskEntity {
     private _id: number | undefined,
     private _title: string,
     private _userId: number,
-    private _scheduleMinnutes: number | undefined,
-    private _actualMinutes: number | undefined // Todo 下記2つはフロントで受け取ってるがOmitしており、使ってないので後々消す // private _createdAt: Date, // private _updatedAt: Date
+    private _scheduleMinutes: number | null | undefined,
+    private _actualMinutes: number | null | undefined,
+    private _createdAt?: Date,
+    private _updatedAt?: Date
   ) {}
   get id() {
     return this._id;
@@ -15,10 +17,16 @@ export class TaskEntity {
   get userId() {
     return this._userId;
   }
-  get scheduleMinnutes() {
-    return this._scheduleMinnutes;
+  get scheduleMinutes() {
+    return this._scheduleMinutes;
   }
   get actualMinutes() {
     return this._actualMinutes;
+  }
+  get createdAt() {
+    return this._createdAt;
+  }
+  get updatedAt() {
+    return this._updatedAt;
   }
 }

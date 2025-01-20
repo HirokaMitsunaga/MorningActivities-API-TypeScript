@@ -9,15 +9,17 @@ export class TaskRepository implements TaskRepositoryInterface {
       const taskRes = await this._taskGateway.createTask(
         task.title,
         task.userId,
-        task.scheduleMinnutes ?? null,
+        task.scheduleMinutes ?? null,
         task.actualMinutes ?? null
       );
       return new TaskEntity(
         taskRes.id,
         taskRes.title,
         taskRes.userId,
-        taskRes.scheduleMinnutes ?? undefined,
-        taskRes.actualMinutes ?? undefined
+        taskRes.scheduleMinutes ?? undefined,
+        taskRes.actualMinutes ?? undefined,
+        taskRes.createdAt,
+        taskRes.updatedAt
       );
     } catch (error) {
       if (error instanceof Error) {
@@ -38,8 +40,10 @@ export class TaskRepository implements TaskRepositoryInterface {
             taskRes.id,
             taskRes.title,
             taskRes.userId,
-            taskRes.scheduleMinnutes ?? undefined,
-            taskRes.actualMinutes ?? undefined
+            taskRes.scheduleMinutes ?? undefined,
+            taskRes.actualMinutes ?? undefined,
+            taskRes.createdAt,
+            taskRes.updatedAt
           )
       );
     } catch (error) {
@@ -62,8 +66,10 @@ export class TaskRepository implements TaskRepositoryInterface {
         taskRes.id,
         taskRes.title,
         taskRes.userId,
-        taskRes.scheduleMinnutes ?? undefined,
-        taskRes.actualMinutes ?? undefined
+        taskRes.scheduleMinutes ?? undefined,
+        taskRes.actualMinutes ?? undefined,
+        taskRes.createdAt,
+        taskRes.updatedAt
       );
     } catch (error) {
       if (error instanceof Error) {
@@ -81,7 +87,7 @@ export class TaskRepository implements TaskRepositoryInterface {
         task.id,
         task.title,
         task.userId,
-        task.scheduleMinnutes ?? null,
+        task.scheduleMinutes ?? null,
         task.actualMinutes ?? null
       );
 
@@ -89,8 +95,10 @@ export class TaskRepository implements TaskRepositoryInterface {
         taskRes.id,
         taskRes.title,
         taskRes.userId,
-        taskRes.scheduleMinnutes ?? undefined,
-        taskRes.actualMinutes ?? undefined
+        taskRes.scheduleMinutes ?? undefined,
+        taskRes.actualMinutes ?? undefined,
+        taskRes.createdAt,
+        taskRes.updatedAt
       );
     } catch (error) {
       if (error instanceof Error) {
