@@ -11,6 +11,7 @@ import { GetAllTasksUsecase } from "../../application/usecase/task/getAllTasksUs
 import { GetTaskByIdUsecase } from "../../application/usecase/task/getTaskByIdUsecase.js";
 import { UpdateTaskUsecase } from "../../application/usecase/task/updateTaskUsecase.js";
 import { DeleteTaskUsecase } from "../../application/usecase/task/deleteTaskUsecase.js";
+import { DomainError } from "../../validator/domainError.js";
 
 const task = new Hono();
 task.use("/task/*", authMiddleware);
@@ -152,6 +153,9 @@ task.put("/task/:id", async (c) => {
     return c.json(responseBody, 201);
   } catch (error) {
     if (error instanceof ValidationError) {
+      return c.json({ error: error.message }, 400);
+    }
+    if (error instanceof DomainError) {
       return c.json({ error: error.message }, 400);
     }
     return c.json({ error: "Failed to update task" }, 500);
