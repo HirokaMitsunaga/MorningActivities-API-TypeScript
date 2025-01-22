@@ -7,7 +7,7 @@ describe("TaskGateway", () => {
   const taskData = {
     title: "test",
     userId: 2,
-    scheduleMinnutes: 20,
+    scheduleMinutes: 20,
     actualMinutes: 23,
   };
 
@@ -15,7 +15,7 @@ describe("TaskGateway", () => {
     id: 1,
     title: "test",
     userId: 2,
-    scheduleMinnutes: 20,
+    scheduleMinutes: 20,
     actualMinutes: 23,
   };
 
@@ -34,7 +34,7 @@ describe("TaskGateway", () => {
       const taskRecord = await taskGateway.createTask(
         taskData.title,
         taskData.userId,
-        taskData.scheduleMinnutes,
+        taskData.scheduleMinutes,
         taskData.actualMinutes
       );
       expect(taskRecord).toEqual(expectedTask);
@@ -47,7 +47,7 @@ describe("TaskGateway", () => {
         taskGateway.createTask(
           taskData.title,
           taskData.userId,
-          taskData.scheduleMinnutes,
+          taskData.scheduleMinutes,
           taskData.actualMinutes
         )
       ).rejects.toThrow("Database error");
@@ -91,7 +91,7 @@ describe("TaskGateway", () => {
         id: 1,
         title: "test",
         userId: 2,
-        scheduleMinnutes: 20,
+        scheduleMinutes: 20,
         actualMinutes: 23,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -132,7 +132,7 @@ describe("TaskGateway", () => {
         updataTaskData.id,
         updataTaskData.title,
         updataTaskData.userId,
-        updataTaskData.scheduleMinnutes,
+        updataTaskData.scheduleMinutes,
         updataTaskData.actualMinutes
       );
       expect(taskRecord).toEqual(expectedTask);
@@ -143,7 +143,7 @@ describe("TaskGateway", () => {
         },
         data: {
           title: updataTaskData.title,
-          scheduleMinnutes: updataTaskData.scheduleMinnutes,
+          scheduleMinutes: updataTaskData.scheduleMinutes,
           actualMinutes: updataTaskData.actualMinutes,
         },
       });
@@ -156,7 +156,7 @@ describe("TaskGateway", () => {
           updataTaskData.id,
           updataTaskData.title,
           updataTaskData.userId,
-          updataTaskData.scheduleMinnutes,
+          updataTaskData.scheduleMinutes,
           updataTaskData.actualMinutes
         )
       ).rejects.toThrow("Database error");
@@ -172,7 +172,7 @@ describe("TaskGateway", () => {
         id: 1,
         title: "test",
         userId: 2,
-        scheduleMinnutes: 20,
+        scheduleMinutes: 20,
         actualMinutes: 23,
         createdAt: new Date(),
         updatedAt: new Date(),

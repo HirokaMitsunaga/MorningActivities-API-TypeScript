@@ -24,7 +24,7 @@ ALTER TABLE `Task` DROP COLUMN `actual_minutes`,
     DROP COLUMN `user_id`,
     ADD COLUMN `actualMinutes` INTEGER NULL,
     ADD COLUMN `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    ADD COLUMN `scheduleMinnutes` INTEGER NULL,
+    ADD COLUMN `scheduleMinutes` INTEGER NULL,
     ADD COLUMN `updatedAt` DATETIME(3) NOT NULL,
     ADD COLUMN `userId` INTEGER NOT NULL;
 

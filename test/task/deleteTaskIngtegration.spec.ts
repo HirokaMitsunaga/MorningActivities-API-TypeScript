@@ -13,11 +13,11 @@ const loginData = {
   password: "password123",
 };
 
-//userIdはDBloginDataの値で登録したユーザのid
+//userIdはloginDataの値で登録したユーザのid(DBの中身を参照してユーザIDをしていする)
 const createTaskData = {
   title: "test",
-  userId: 4,
-  scheduleMinnutes: 20,
+  userId: 6,
+  scheduleMinutes: 20,
   actualMinutes: 23,
 };
 
@@ -40,7 +40,7 @@ describe("Task integration test", () => {
       data: {
         title: createTaskData.title,
         userId: createTaskData.userId,
-        scheduleMinnutes: createTaskData.scheduleMinnutes,
+        scheduleMinutes: createTaskData.scheduleMinutes,
         actualMinutes: createTaskData.actualMinutes,
       },
     });

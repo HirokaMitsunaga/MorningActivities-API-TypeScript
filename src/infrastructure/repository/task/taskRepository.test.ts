@@ -10,7 +10,7 @@ describe("TaskRepository Test", () => {
       [
         title: string,
         userId: number,
-        scheduleMinnutes: number | null,
+        scheduleMinutes: number | null,
         actualMinutes: number | null
       ]
     >;
@@ -25,7 +25,7 @@ describe("TaskRepository Test", () => {
         taskId: number,
         title: string,
         userId: number,
-        scheduleMinnutes: number | null,
+        scheduleMinutes: number | null,
         actualMinutes: number | null
       ]
     >;
@@ -36,13 +36,21 @@ describe("TaskRepository Test", () => {
   const task = new TaskEntity(undefined, "test", 1, 20, 20);
   const updateTask = new TaskEntity(1, "test", 1, 20, 20);
 
-  const expectedDomainTask = new TaskEntity(1, "test", 1, 20, 20);
+  const expectedDomainTask = new TaskEntity(
+    1,
+    "test",
+    1,
+    20,
+    20,
+    new Date(),
+    new Date()
+  );
 
   const expectedPrismaTask = {
     id: 1,
     title: "test",
     userId: 1,
-    scheduleMinnutes: 20,
+    scheduleMinutes: 20,
     actualMinutes: 20,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -66,7 +74,7 @@ describe("TaskRepository Test", () => {
       expect(mockTaskGateway.createTask).toHaveBeenCalledWith(
         task.title,
         task.userId,
-        task.scheduleMinnutes ?? null,
+        task.scheduleMinutes ?? null,
         task.actualMinutes ?? null
       );
       expect(result).toEqual(expectedDomainTask);
@@ -87,8 +95,10 @@ describe("TaskRepository Test", () => {
           expectedDomainTask.id,
           expectedDomainTask.title,
           expectedDomainTask.userId,
-          expectedDomainTask.scheduleMinnutes,
-          expectedDomainTask.actualMinutes
+          expectedDomainTask.scheduleMinutes,
+          expectedDomainTask.actualMinutes,
+          expectedDomainTask.createdAt,
+          expectedDomainTask.updatedAt
         ),
       ];
       const expectedPrismaTasks = [expectedPrismaTask];
@@ -153,7 +163,7 @@ describe("TaskRepository Test", () => {
         updateTask.id,
         updateTask.title,
         updateTask.userId,
-        updateTask.scheduleMinnutes ?? null,
+        updateTask.scheduleMinutes ?? null,
         updateTask.actualMinutes ?? null
       );
       expect(result).toEqual(expectedDomainTask);

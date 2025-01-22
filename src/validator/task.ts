@@ -9,11 +9,11 @@ export const TaskModel = z.object({
     required_error: "userId is required",
     invalid_type_error: "userId must be a number",
   }),
-  scheduleMinnutes: z
+  scheduleMinutes: z
     .number({
-      invalid_type_error: "scheduleMinnutes must be a number",
+      invalid_type_error: "scheduleMinutes must be a number",
     })
-    .min(0, { message: "scheduleMinnutes must be greater than or equal to 0" })
+    .min(0, { message: "scheduleMinutes must be greater than or equal to 0" })
     .optional(),
   actualMinutes: z
     .number({

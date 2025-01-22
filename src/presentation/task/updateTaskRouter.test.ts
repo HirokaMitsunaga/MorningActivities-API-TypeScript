@@ -12,8 +12,8 @@ describe("updateTask test", () => {
   //入力値
   const task: TaskPostRequestBody = {
     title: "test",
-    scheduleMinnutes: 20,
-    actualMinutes: 23,
+    scheduled_minutes: 20,
+    actual_minutes: 23,
   };
   //mockUpdateTaskUsecaseの引数
   const mockTask = new TaskEntity(1, "test", 1, 20, 23);
@@ -47,15 +47,15 @@ describe("updateTask test", () => {
             taskId,
             taskData.title,
             userId,
-            taskData.scheduleMinnutes ?? undefined,
-            taskData.actualMinutes ?? undefined
+            taskData.scheduled_minutes ?? undefined,
+            taskData.actual_minutes ?? undefined
           )
         );
         const responseBody = {
           title: output.title,
           userId: output.userId,
-          scheduleMinnutes: output.scheduleMinnutes,
-          actualMinutes: output.actualMinutes,
+          scheduled_minutes: output.scheduleMinutes,
+          actual_minutes: output.actualMinutes,
         };
 
         return c.json(responseBody, 201);
@@ -80,8 +80,8 @@ describe("updateTask test", () => {
         method: "PUT",
         body: JSON.stringify({
           title: mockTask.title,
-          scheduleMinnutes: mockTask.scheduleMinnutes,
-          actualMinutes: mockTask.actualMinutes,
+          scheduled_minutes: mockTask.scheduleMinutes,
+          actual_minutes: mockTask.actualMinutes,
         }),
       });
 
@@ -92,15 +92,15 @@ describe("updateTask test", () => {
     it("バリデーションエラー時は400を返すこと", async () => {
       const invalidTask: TaskPostRequestBody = {
         title: "testtesttesttesttesttesttesttesttesttesttesttesttest",
-        scheduleMinnutes: 20,
-        actualMinutes: 23,
+        scheduled_minutes: 20,
+        actual_minutes: 23,
       };
       const res = await app.request("/api/task/1", {
         method: "PUT",
         body: JSON.stringify({
           title: invalidTask.title,
-          scheduleMinnutes: invalidTask.scheduleMinnutes,
-          actualMinutes: invalidTask.actualMinutes,
+          scheduled_minutes: invalidTask.scheduled_minutes,
+          actual_minutes: invalidTask.actual_minutes,
         }),
       });
 
@@ -118,8 +118,8 @@ describe("updateTask test", () => {
         method: "PUT",
         body: JSON.stringify({
           title: mockTask.title,
-          scheduleMinnutes: mockTask.scheduleMinnutes,
-          actualMinutes: mockTask.actualMinutes,
+          scheduled_minutes: mockTask.scheduleMinutes,
+          actual_minutes: mockTask.actualMinutes,
         }),
       });
       expect(res.status).toBe(500);

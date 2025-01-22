@@ -12,13 +12,13 @@ const loginData = {
 
 const correctTaskData = {
   title: "test",
-  scheduleMinnutes: 20,
+  scheduleMinutes: 20,
   actualMinutes: 23,
 };
 
 const invalidTaskData = {
   title: "testtesttesttesttesttesttesttesttesttesttesttesttest",
-  scheduleMinnutes: 20,
+  scheduleMinutes: 20,
   actualMinutes: 23,
 };
 

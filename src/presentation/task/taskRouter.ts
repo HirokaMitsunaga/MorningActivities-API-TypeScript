@@ -38,8 +38,8 @@ const deleteTaskUsecase = new DeleteTaskUsecase(
 
 export type TaskPostRequestBody = {
   title: string;
-  scheduleMinnutes: number | undefined;
-  actualMinutes: number | undefined;
+  scheduled_minutes: number | undefined;
+  actual_minutes: number | undefined;
 };
 
 task.post("/task", async (c) => {
@@ -62,15 +62,16 @@ task.post("/task", async (c) => {
         undefined,
         taskData.title,
         userId,
-        taskData.scheduleMinnutes ?? undefined,
-        taskData.actualMinutes ?? undefined
+        taskData.scheduled_minutes,
+        taskData.actual_minutes
       )
     );
     const responseBody = {
+      id: output.id,
       title: output.title,
       userId: output.userId,
-      scheduleMinnutes: output.scheduleMinnutes,
-      actualMinutes: output.actualMinutes,
+      scheduled_minutes: output.scheduleMinutes,
+      actual_minutes: output.actualMinutes,
     };
 
     return c.json(responseBody, 201);
@@ -89,7 +90,21 @@ task.get("/task", async (c) => {
 
     const output = await getAllTasksUsecase.run(userId);
 
-    return c.json(output, 201);
+    if (!output) {
+      return c.json(output, 201);
+    }
+
+    const responseBody = output.map((task) => ({
+      id: task.id,
+      title: task.title,
+      userId: task.userId,
+      scheduled_minutes: task.scheduleMinutes,
+      actual_minutes: task.actualMinutes,
+      created_at: task.createdAt,
+      updated_at: task.updatedAt,
+    }));
+
+    return c.json(responseBody, 201);
   } catch (error) {
     if (error instanceof ValidationError) {
       return c.json({ error: error.message }, 400);
@@ -106,7 +121,21 @@ task.get("/task/:id", async (c) => {
 
     const output = await getTaskByIdUsecase.run(userId, taskId);
 
-    return c.json(output, 201);
+    if (!output) {
+      return c.json(output, 201);
+    }
+
+    const responseBody = {
+      id: output.id,
+      title: output.title,
+      userId: output.userId,
+      scheduled_minutes: output.scheduleMinutes,
+      actual_minutes: output.actualMinutes,
+      created_at: output.createdAt,
+      updated_at: output.updatedAt,
+    };
+
+    return c.json(responseBody, 201);
   } catch (error) {
     if (error instanceof ValidationError) {
       return c.json({ error: error.message }, 400);
@@ -136,18 +165,19 @@ task.put("/task/:id", async (c) => {
         taskId,
         taskData.title,
         userId,
-        taskData.scheduleMinnutes ?? undefined,
-        taskData.actualMinutes ?? undefined
+        taskData.scheduled_minutes,
+        taskData.actual_minutes
       )
     );
     if (!output) {
       return c.body(null, 204);
     }
     const responseBody = {
+      id: output.id,
       title: output.title,
       userId: output.userId,
-      scheduleMinnutes: output.scheduleMinnutes,
-      actualMinutes: output.actualMinutes,
+      scheduled_minutes: output.scheduleMinutes,
+      actual_minutes: output.actualMinutes,
     };
 
     return c.json(responseBody, 201);
