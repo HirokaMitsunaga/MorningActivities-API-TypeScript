@@ -6,8 +6,10 @@ import like from "./presentation/like/likeRouter.js";
 import comment from "./presentation/comment/commentRouter.js";
 import commentLike from "./presentation/commentLike/commentLikeRouter.js";
 import { middlewareFactory } from "./middleware/appMiddleware.js";
+import { logger } from "hono/logger";
 
 const app = middlewareFactory.createApp().basePath("/api");
+app.use(logger());
 app.route("/", user);
 app.route("/", task);
 app.route("/", post);

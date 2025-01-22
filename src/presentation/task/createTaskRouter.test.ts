@@ -13,8 +13,8 @@ describe("createTask test", () => {
   //入力値
   const task: TaskPostRequestBody = {
     title: "test",
-    scheduleMinutes: 20,
-    actualMinutes: 23,
+    scheduled_minutes: 20,
+    actual_minutes: 23,
   };
   //mockCreateTaskUsecaseの引数
   const mockTask = new TaskEntity(undefined, "test", 1, 20, 23);
@@ -46,15 +46,15 @@ describe("createTask test", () => {
             undefined,
             taskData.title,
             userId,
-            taskData.scheduleMinutes ?? undefined,
-            taskData.actualMinutes ?? undefined
+            taskData.scheduled_minutes ?? undefined,
+            taskData.actual_minutes ?? undefined
           )
         );
         const responseBody = {
           title: output.title,
           userId: output.userId,
-          scheduleMinutes: output.scheduleMinutes,
-          actualMinutes: output.actualMinutes,
+          scheduled_minutes: output.scheduleMinutes,
+          actual_minutes: output.actualMinutes,
         };
 
         return c.json(responseBody, 201);
@@ -86,8 +86,8 @@ describe("createTask test", () => {
     it("バリデーションエラー時は400を返すこと", async () => {
       const invalidTask: TaskPostRequestBody = {
         title: "testtesttesttesttesttesttesttesttesttesttesttesttest",
-        scheduleMinutes: 20,
-        actualMinutes: 23,
+        scheduled_minutes: 20,
+        actual_minutes: 23,
       };
       const client = testClient(app);
       const res = await client.api.task.$post({

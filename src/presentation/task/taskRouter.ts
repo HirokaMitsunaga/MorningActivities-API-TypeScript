@@ -38,8 +38,8 @@ const deleteTaskUsecase = new DeleteTaskUsecase(
 
 export type TaskPostRequestBody = {
   title: string;
-  scheduleMinutes: number | undefined;
-  actualMinutes: number | undefined;
+  scheduled_minutes: number | undefined;
+  actual_minutes: number | undefined;
 };
 
 task.post("/task", async (c) => {
@@ -62,15 +62,16 @@ task.post("/task", async (c) => {
         undefined,
         taskData.title,
         userId,
-        taskData.scheduleMinutes,
-        taskData.actualMinutes
+        taskData.scheduled_minutes,
+        taskData.actual_minutes
       )
     );
     const responseBody = {
+      id: output.id,
       title: output.title,
       userId: output.userId,
-      scheduleMinutes: output.scheduleMinutes,
-      actualMinutes: output.actualMinutes,
+      scheduled_minutes: output.scheduleMinutes,
+      actual_minutes: output.actualMinutes,
     };
 
     return c.json(responseBody, 201);
@@ -94,10 +95,11 @@ task.get("/task", async (c) => {
     }
 
     const responseBody = output.map((task) => ({
+      id: task.id,
       title: task.title,
       userId: task.userId,
-      scheduleMinutes: task.scheduleMinutes,
-      actualMinutes: task.actualMinutes,
+      scheduled_minutes: task.scheduleMinutes,
+      actual_minutes: task.actualMinutes,
       created_at: task.createdAt,
       updated_at: task.updatedAt,
     }));
@@ -124,10 +126,11 @@ task.get("/task/:id", async (c) => {
     }
 
     const responseBody = {
+      id: output.id,
       title: output.title,
       userId: output.userId,
-      scheduleMinutes: output.scheduleMinutes,
-      actualMinutes: output.actualMinutes,
+      scheduled_minutes: output.scheduleMinutes,
+      actual_minutes: output.actualMinutes,
       created_at: output.createdAt,
       updated_at: output.updatedAt,
     };
@@ -162,18 +165,19 @@ task.put("/task/:id", async (c) => {
         taskId,
         taskData.title,
         userId,
-        taskData.scheduleMinutes,
-        taskData.actualMinutes
+        taskData.scheduled_minutes,
+        taskData.actual_minutes
       )
     );
     if (!output) {
       return c.body(null, 204);
     }
     const responseBody = {
+      id: output.id,
       title: output.title,
       userId: output.userId,
-      scheduleMinutes: output.scheduleMinutes,
-      actualMinutes: output.actualMinutes,
+      scheduled_minutes: output.scheduleMinutes,
+      actual_minutes: output.actualMinutes,
     };
 
     return c.json(responseBody, 201);
