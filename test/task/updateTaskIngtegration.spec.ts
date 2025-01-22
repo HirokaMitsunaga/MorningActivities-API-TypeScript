@@ -16,7 +16,7 @@ const loginData = {
 //userIdはDBloginDataの値で登録したユーザのid
 const createTaskData = {
   title: "test",
-  userId: 4,
+  userId: 6,
   scheduleMinutes: 20,
   actualMinutes: 23,
 };

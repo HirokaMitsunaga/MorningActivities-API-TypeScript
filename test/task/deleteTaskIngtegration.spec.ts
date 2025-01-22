@@ -13,10 +13,10 @@ const loginData = {
   password: "password123",
 };
 
-//userIdはDBloginDataの値で登録したユーザのid
+//userIdはloginDataの値で登録したユーザのid(DBの中身を参照してユーザIDをしていする)
 const createTaskData = {
   title: "test",
-  userId: 4,
+  userId: 6,
   scheduleMinutes: 20,
   actualMinutes: 23,
 };
