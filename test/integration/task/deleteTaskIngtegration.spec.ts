@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
-import { middlewareFactory } from "../../src/middleware/appMiddleware.js";
-import user from "../../src/presentation/auth/userRouter.js";
-import task from "../../src/presentation/task/taskRouter.js";
+import { middlewareFactory } from "../../../src/middleware/appMiddleware.js";
+import user from "../../../src/presentation/auth/userRouter.js";
+import task from "../../../src/presentation/task/taskRouter.js";
 
 import { Hono } from "hono";
 
@@ -13,7 +13,7 @@ const loginData = {
   password: "password123",
 };
 
-//userIdはDBloginDataの値で登録したユーザのid
+//userIdはloginDataの値で登録したユーザのid(DBの中身を参照してユーザIDをしていする)
 const createTaskData = {
   title: "test",
   userId: 6,
@@ -21,19 +21,7 @@ const createTaskData = {
   actualMinutes: 23,
 };
 
-const updataTaskData = {
-  title: "test",
-  scheduleMinutes: 20,
-  actualMinutes: 23,
-};
-
-const invalidTaskData = {
-  title: "testtesttesttesttesttesttesttesttesttesttesttesttest",
-  scheduleMinutes: 20,
-  actualMinutes: 23,
-};
-
-describe("Login integration test", () => {
+describe("Task integration test", () => {
   let app: Hono;
   let authCookie: string;
   let taskId: number; // クラススコープで変数を定義
@@ -58,10 +46,10 @@ describe("Login integration test", () => {
     });
     taskId = taskRes.id;
   });
-  it("タスクの更新が成功する", async () => {
+  it("タスクの削除が成功する", async () => {
     const response = await app.request(`/api/task/${taskId}`, {
-      method: "PUT",
-      body: JSON.stringify(updataTaskData),
+      method: "DELETE",
+      body: JSON.stringify({ userId: createTaskData.userId, taskId: taskId }),
       headers: {
         Cookie: authCookie,
       },
@@ -69,21 +57,11 @@ describe("Login integration test", () => {
     console.log(response);
     expect(response.status).toBe(201);
   });
-  it("バリデーションエラー時は400を返すこと", async () => {
-    const response = await app.request(`/api/task/${taskId}`, {
-      method: "PUT",
-      body: JSON.stringify(invalidTaskData),
-      headers: {
-        Cookie: authCookie,
-      },
-    });
-    console.log(response);
-    expect(response.status).toBe(400);
-  });
+
   it("cookieに認証情報がない場合はエラーを返す", async () => {
     const response = await app.request(`/api/task/${taskId}`, {
-      method: "PUT",
-      body: JSON.stringify(invalidTaskData),
+      method: "DELETE",
+      body: JSON.stringify({ userId: createTaskData.userId, taskId: taskId }),
     });
     expect(response.status).toBe(401);
   });

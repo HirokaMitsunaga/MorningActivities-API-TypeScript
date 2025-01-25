@@ -1,10 +1,8 @@
-import { middlewareFactory } from "../../src/middleware/appMiddleware.js";
-import user from "../../src/presentation/auth/userRouter.js";
-import task from "../../src/presentation/task/taskRouter.js";
+import { middlewareFactory } from "../../../src/middleware/appMiddleware.js";
+import user from "../../../src/presentation/auth/userRouter.js";
+import task from "../../../src/presentation/task/taskRouter.js";
 
 import { Hono } from "hono";
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
 
 const loginData = {
   email: "test@example.com",
@@ -12,10 +10,14 @@ const loginData = {
   password: "password123",
 };
 
-//userIdはDBloginDataの値で登録したユーザのid
-const createTaskData = {
+const correctTaskData = {
   title: "test",
-  userId: 6,
+  scheduleMinutes: 20,
+  actualMinutes: 23,
+};
+
+const invalidTaskData = {
+  title: "testtesttesttesttesttesttesttesttesttesttesttesttest",
   scheduleMinutes: 20,
   actualMinutes: 23,
 };
@@ -23,7 +25,6 @@ const createTaskData = {
 describe("Login integration test", () => {
   let app: Hono;
   let authCookie: string;
-  let taskId: number;
 
   beforeEach(async () => {
     app = middlewareFactory.createApp().basePath("/api");
@@ -35,43 +36,32 @@ describe("Login integration test", () => {
       body: JSON.stringify(loginData),
     });
     authCookie = loginResponse.headers.get("Set-Cookie") || "";
-    const taskRes = await prisma.task.create({
-      data: {
-        title: createTaskData.title,
-        userId: createTaskData.userId,
-        scheduleMinutes: createTaskData.scheduleMinutes,
-        actualMinutes: createTaskData.actualMinutes,
-      },
-    });
-    taskId = taskRes.id;
   });
 
-  it("タスクの取得が成功する", async () => {
+  it("タスクの作成が成功する", async () => {
     const response = await app.request("/api/task", {
-      method: "GET",
+      method: "POST",
+      body: JSON.stringify(correctTaskData),
       headers: {
         Cookie: authCookie,
       },
     });
     expect(response.status).toBe(201);
   });
-  it("タスクが存在しない時は200を返すこと", async () => {
-    await prisma.task.deleteMany({
-      where: {
-        userId: createTaskData.userId,
-      },
-    });
+  it("バリデーションエラー時は400を返すこと", async () => {
     const response = await app.request("/api/task", {
-      method: "GET",
+      method: "POST",
+      body: JSON.stringify(invalidTaskData),
       headers: {
         Cookie: authCookie,
       },
     });
-    expect(response.status).toBe(201);
+    expect(response.status).toBe(400);
   });
   it("cookieに認証情報がない場合はエラーを返す", async () => {
     const response = await app.request("/api/task", {
-      method: "GET",
+      method: "POST",
+      body: JSON.stringify(invalidTaskData),
     });
     expect(response.status).toBe(401);
   });
