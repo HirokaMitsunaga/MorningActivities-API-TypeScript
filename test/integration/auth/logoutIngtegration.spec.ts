@@ -1,5 +1,5 @@
-import { middlewareFactory } from "../../src/middleware/appMiddleware.js";
-import user from "../../src/presentation/auth/userRouter.js";
+import { middlewareFactory } from "../../../src/middleware/appMiddleware.js";
+import user from "../../../src/presentation/auth/userRouter.js";
 
 import { Hono } from "hono";
 
