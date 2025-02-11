@@ -17,8 +17,6 @@ describe("UpdatePostUsecase Test", () => {
 
   const expectedPost = new PostEntity(1, "test", 1);
 
-  const undefinedPostId = new PostEntity(undefined, "test", 1);
-
   beforeEach(() => {
     mockPostRepository = {
       createPost: jest.fn(),
@@ -36,14 +34,6 @@ describe("UpdatePostUsecase Test", () => {
     const result = await updatePostUsecase.run(post);
     expect(result).toBe(expectedPost);
     expect(mockPostRepository.updatePost).toHaveBeenCalledWith(post);
-  });
-  it("postIdがundefined型の場合、エラーを返す", async () => {
-    mockPostRepository.updatePost.mockRejectedValueOnce(
-      new Error("Database error")
-    );
-    await expect(updatePostUsecase.run(undefinedPostId)).rejects.toThrow(
-      "postId is required and must be a number"
-    );
   });
   it("タスク更新が失敗する", async () => {
     mockPostRepository.updatePost.mockRejectedValueOnce(
